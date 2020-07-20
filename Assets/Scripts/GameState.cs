@@ -8,11 +8,36 @@ public class GameState : MonoBehaviour
     public GameObject character;
     public Canvas ui;
 
-    string[] uiElements = {"Level Stats", "Input Container"};
+    string[] uiElements = {
+        "Level Stats",
+        "Input Container",
+        "Winner Window",
+        "Buttons"
+    };
+
+    public bool winLevel = false;
+
+    public bool firstStage = true;
+    public bool secondStage = false;
+
+    private void Update() {
+        Debug.Log("State: " + State);
+        if (winLevel){
+            showWinMenu();
+            GameObject buttons = GetChildWithName(ui.gameObject, uiElements[3]);
+            Hide(buttons.GetComponent<CanvasGroup>());
+        }
+    }
 
     public void SwitchState(){
+        ui.GetComponent<ToggleCamera>().switchCamera();
         if (State){
-            ResetValues();
+            if(secondStage){
+                HideUI();
+            }
+            else{
+                ResetValues();
+            }
         }
         else{
             ShowInGame();
@@ -21,14 +46,22 @@ public class GameState : MonoBehaviour
         State = !State;
     }
 
-    private void ResetValues(){
+    public void ResetValues(){
+        winLevel = false;
+        firstStage = true;
+        secondStage = false;
         character.GetComponent<SimulationMovement>().ResetValues();
+        HideUI();
+    }
+
+    public void HideUI(){
         GameObject LevelStats = GetChildWithName(ui.gameObject, uiElements[0]);
         if (checkIfNull(LevelStats, uiElements[0], "ResetValues")){
             Hide(LevelStats.GetComponent<CanvasGroup>());
         }
+        GameObject buttons = GetChildWithName(ui.gameObject, uiElements[3]);
+        Show(buttons.GetComponent<CanvasGroup>());
     }
-
     private void ShowInGame(){
         GameObject LevelStats = GetChildWithName(ui.gameObject, uiElements[0]);
         if (checkIfNull(LevelStats, uiElements[0], "ShowInGame")){
@@ -47,6 +80,13 @@ public class GameState : MonoBehaviour
             return childTrans.gameObject;
         } else {
             return null;
+        }
+    }
+
+    private void showWinMenu(){
+        GameObject winWindow = GetChildWithName(ui.gameObject, uiElements[2]);
+        if(checkIfNull(winWindow, uiElements[2], "showWinMenu")){
+            winWindow.SetActive(true);
         }
     }
 
@@ -74,7 +114,7 @@ public class GameState : MonoBehaviour
             returnValue = false;
         }
 
-        Debug.Log(functionName + ": " + msg);
+        //Debug.Log(functionName + ": " + msg);
         return returnValue;
     }
 }

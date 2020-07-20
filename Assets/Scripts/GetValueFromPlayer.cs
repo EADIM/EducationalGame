@@ -19,7 +19,7 @@ public class GetValueFromPlayer : MonoBehaviour
     private float getAttribute(){
         float value = 0.0f;
         if (attribute == 0){
-            value = sim.Speed;
+            value = sim.HorizontalSpeed;
         }
         else if (attribute == 1){
             value = sim.JumpAngle;

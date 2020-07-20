@@ -13,32 +13,46 @@ public class KeepButtonColor : MonoBehaviour
     public bool isPressed = false;
 
     void Start(){
-        checkIfIsPressed();    
+        checkIfJoystickIsActive();    
         button = gameObjectButton.GetComponent<Button>();
         colorBlock = button.colors;
         onButtonClick();
     }
 
+    private void Update() {
+        if(joystick != null){
+            checkIfJoystickIsActive();
+            onButtonClick();
+        }
+    }
+
     public void onButtonClick(){
+        SetColors(checkIfButtonIsPressed());
+    }
+
+    private Color checkIfButtonIsPressed(){
         if (isPressed){
-            isPressed = false;
-            colorBlock.normalColor = colorOnButtonPressed;
+            return colorOnButtonPressed;
         }
         else{
-            isPressed = true;
-            colorBlock.normalColor = colorOnButtonReleased;
+            return colorOnButtonReleased;
         }
+    }
+    private void SetColors(Color color){
+        colorBlock.normalColor = color;
+        isPressed = !isPressed;
 
         if(button != null){
             button.colors = colorBlock;
         }
     }
 
-    private void checkIfIsPressed(){
+    private void checkIfJoystickIsActive(){
         try{
             isPressed = joystick.activeSelf;
         }catch(UnassignedReferenceException){
-            Debug.Log("Joystick Null on " + this.ToString());
+            //Debug.Log("Joystick Null on " + this.ToString());
+            isPressed = false;
         }
     }
 }

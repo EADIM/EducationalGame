@@ -30,7 +30,7 @@ public class RaycastFromAtoB : MonoBehaviour
             Debug.DrawRay(A_Pos, direction, Color.red);
         }
 
-        //player_rb.AddForce(Physics.gravity);
+        player_rb.AddForce(Physics.gravity, ForceMode.Acceleration);
     }
 
     private void Start() {
@@ -39,12 +39,13 @@ public class RaycastFromAtoB : MonoBehaviour
     }
 
     private void playerJump(){
-        float V0 = player_sm.findV0usingVx(player_sm.Speed, player_sm.JumpAngle);
+        float V0 = player_sm.findV0usingVx(player_sm.HorizontalSpeed, player_sm.JumpAngle);
+        float Vx = player_sm.HorizontalSpeed;
         float Vy = player_sm.findVy(V0, player_sm.JumpAngle);
         V0 = Mathf.Ceil(V0);
         Vy = Mathf.Ceil(Vy);
-        Debug.Log("V0: " + V0 + " Vy: " + Vy);
-        Vector3 force = new Vector3(0, 2, 2);
-        player_rb.AddForce(force * V0, ForceMode.Impulse);
+        //Debug.Log("V0: " + V0 + " Vy: " + Vy);
+        Vector3 force = new Vector3(0, Vy/10, Vx/10);
+        player_rb.AddForce(force * player_rb.mass, ForceMode.Impulse);
     }
 }

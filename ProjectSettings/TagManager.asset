@@ -10,6 +10,9 @@ TagManager:
   - MidPlatform
   - StartPlatform
   - FinalPlatform
+  - Floor
+  - Wall
+  - Ceiling
   layers:
   - Default
   - TransparentFX

@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\ObjectMovement.cs" />
      <Compile Include="Assets\Scripts\RaycastFromAtoB.cs" />
      <Compile Include="Assets\Scripts\SetValueOnCharacter.cs" />
+     <Compile Include="Assets\Scripts\ShowFPS.cs" />
      <Compile Include="Assets\Scripts\SimulationMovement.cs" />
      <Compile Include="Assets\Scripts\ToggleCamera.cs" />
      <Compile Include="Assets\Scripts\ToggleInputField.cs" />

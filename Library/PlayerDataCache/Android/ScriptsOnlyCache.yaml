@@ -12,6 +12,7 @@ ScriptsOnlyBuild:
     - ObjectMovement
     - RaycastFromAtoB
     - SetValueOnCharacter
+    - ShowFPS
     - SimulationMovement
     - ToggleCamera
     - ToggleInputField
@@ -186,6 +187,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 14004}
     - Class: 114
       Script: {instanceID: 14054}
+    - Class: 114
+      Script: {instanceID: 84792}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -1330,6 +1333,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: d8faf42a002bb8903d092e35192d621f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ShowFPS
   platform: 13
   scenePathNames:
   - Assets/Scenes/Menu.unity
@@ -1338,4 +1347,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/Level01.unity
   - Assets/Scenes/Level02.unity
   - Assets/Scenes/Level03.unity
-  playerPath: D:/Projects/UnityProjects/EG-1/EG-3-LowQuality.apk
+  playerPath: D:/Projects/UnityProjects/EG-1/EG-3-LQ-Occlusion.apk

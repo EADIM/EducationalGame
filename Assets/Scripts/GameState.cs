@@ -21,7 +21,7 @@ public class GameState : MonoBehaviour
     public bool secondStage = false;
 
     private void Update() {
-        Debug.Log("State: " + State);
+        //Debug.Log("State: " + State);
         if (winLevel){
             showWinMenu();
             GameObject buttons = GetChildWithName(ui.gameObject, uiElements[3]);
@@ -31,6 +31,7 @@ public class GameState : MonoBehaviour
 
     public void SwitchState(){
         ui.GetComponent<ToggleCamera>().switchCamera();
+        
         if (State){
             if(secondStage){
                 HideUI();

@@ -27,6 +27,10 @@ public class KeepButtonColor : MonoBehaviour
     }
 
     public void onButtonClick(){
+        if(this.transform.name == "Play Button"){
+            Debug.Log("Clicked Play Button");
+        }
+        
         SetColors(checkIfButtonIsPressed());
     }
 

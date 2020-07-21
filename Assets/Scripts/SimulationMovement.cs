@@ -43,6 +43,9 @@ public class SimulationMovement : MonoBehaviour
         "Ceiling"
     };
 
+    private bool firstTimeStageOne = false;
+    private bool firstTImeStageTwo = false;
+
     private void Start() {
         thisParent = this.transform.parent.gameObject;
         gameState = thisParent.GetComponent<GameState>();
@@ -86,23 +89,29 @@ public class SimulationMovement : MonoBehaviour
         string tag = other.gameObject.tag;
         //Debug.Log("Hit " + tag + "!");
         if(tag == "MidPlatform"){
-            rb.velocity = Vector3.zero;
-            reachedMidPlatform = true;
-            clickPlayButton();
-            setPlayButtonText("1/2");
-            midPosition = Character.transform.position;
-            gameState.firstStage = false;
-            gameState.secondStage = true;
-            gameState.SwitchState();
+            if (!firstTimeStageOne){
+                rb.velocity = Vector3.zero;
+                reachedMidPlatform = true;
+                clickPlayButton(); // changes play button color;
+                setPlayButtonText("1/2");
+                midPosition = Character.transform.position;
+                gameState.firstStage = false;
+                gameState.secondStage = true;
+                gameState.SwitchState(); // switch variable state to its opposite value;
+                firstTimeStageOne = true;
+            }
         }
 
         if(tag == "FinalPlatform"){
             rb.velocity = Vector3.zero;
             if (reachedMidPlatform){
-                gameState.State = false;
-                reachedFinalPlatform = true;
-                gameState.winLevel = true;
-                setPlayButtonText("2/2");
+                if(!firstTImeStageTwo){
+                    gameState.State = false;
+                    reachedFinalPlatform = true;
+                    gameState.winLevel = true;
+                    setPlayButtonText("2/2");
+                    firstTImeStageTwo = true;
+                }
             }
             else{
                 ResetPosition(midPosition);
@@ -140,6 +149,8 @@ public class SimulationMovement : MonoBehaviour
         factor = 1.0f;
         reachedMidPlatform = false;
         reachedFinalPlatform = false;
+        firstTimeStageOne = false;
+        firstTImeStageTwo = false;
         doOneJump = false;
     }
 

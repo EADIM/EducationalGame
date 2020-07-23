@@ -46,6 +46,7 @@
      <Compile Include="Assets\Package_Fase01\AssetStoreOriginals\_SNAPS_PrototypingAssets\About\Scripts\Readme.cs" />
      <Compile Include="Assets\Scripts\Level Selector\LevelSelector.cs" />
      <Compile Include="Assets\Scripts\Level\ActionMessage.cs" />
+     <Compile Include="Assets\Scripts\Level\ChangePlayerPosition.cs" />
      <Compile Include="Assets\Scripts\Level\Checkpoint.cs" />
      <Compile Include="Assets\Scripts\Level\Checkpoint_UI.cs" />
      <Compile Include="Assets\Scripts\Level\FontController.cs" />
@@ -661,6 +662,9 @@
     <Reference Include="Unity.Rider.Editor">
         <HintPath>D:/Projects/GitHub/190720 - Educational Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+        <HintPath>D:/Projects/GitHub/190720 - Educational Game/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
         <HintPath>D:/Projects/GitHub/190720 - Educational Game/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
@@ -672,9 +676,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
         <HintPath>D:/Projects/GitHub/190720 - Educational Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.2D.Sprite.Editor">
-        <HintPath>D:/Projects/GitHub/190720 - Educational Game/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

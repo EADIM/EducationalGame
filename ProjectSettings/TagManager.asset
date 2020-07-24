@@ -13,6 +13,8 @@ TagManager:
   - Floor
   - Wall
   - Ceiling
+  - MidPlatform-Collider
+  - FinalPlatform-Collider
   layers:
   - Default
   - TransparentFX

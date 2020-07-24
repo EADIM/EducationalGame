@@ -16,7 +16,7 @@ public class ChangePlayerPosition : MonoBehaviour
     }
 
     private void OnMouseDown() {
-        if(gms.States["Exploration"]){
+        if(gms.States[gms.getExplorationName()]){
             Debug.Log("Clicou no collider do " + transform.parent.name);
             Debug.Log("Posição do Coliider: " + transform.position);
             if(sm.checkpoints.Count > 0){

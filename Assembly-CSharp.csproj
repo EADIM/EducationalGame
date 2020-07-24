@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\Level\ObjectMovement.cs" />
      <Compile Include="Assets\Scripts\Level\OnClickChangeGameState.cs" />
      <Compile Include="Assets\Scripts\Level\PlayerCamera.cs" />
+     <Compile Include="Assets\Scripts\Level\PlayerDetector.cs" />
      <Compile Include="Assets\Scripts\Level\RaycastFromAtoB.cs" />
      <Compile Include="Assets\Scripts\Level\Reset.cs" />
      <Compile Include="Assets\Scripts\Level\SetValueOnCharacter.cs" />

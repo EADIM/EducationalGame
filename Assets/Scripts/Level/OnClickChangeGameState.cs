@@ -14,12 +14,11 @@ public class OnClickChangeGameState : MonoBehaviour
 
     public void changeState(){
 
-        if(gameState.States["Exploration"]){
-            gameState.SwitchState("Simulation");
+        if(gameState.States[gameState.getExplorationName()]){
+            gameState.SwitchState(gameState.getSimulationName());
         }
-        else if (gameState.States["Simulation"]){
-            gameState.SwitchState("Exploration");
+        else if (gameState.States[gameState.getSimulationName()]){
+            gameState.SwitchState(gameState.getExplorationName());
         }
-        
     }
 }

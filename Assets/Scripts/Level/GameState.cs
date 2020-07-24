@@ -8,21 +8,21 @@ public class GameState : MonoBehaviour
     public GameObject character;
     public Canvas canvas;
     public Dictionary<string, bool> States = new Dictionary<string, bool>();
-    public string currentState = "Exploration";
 
+    public string currentState = "Exploration";
     public string previousState = "Exploration";
 
-    private void Awake() {
+    private string SimulationName = "Simulation";
+    private string ExplorationName = "Exploration";
+    private string WinName = "Win";
+    private string LostName = "Lost";
+    private string PauseName = "Pause";
+
+    private void Awake()
+    {
         InitializeStates();    
     }
-
-    private void Start() { 
-    }
-
-    private void Update() {
     
-    }
-
     public void SwitchState(string newState){
         Debug.Log("State switched to " + newState, this);
         Dictionary<string, bool>.KeyCollection kc = States.Keys;
@@ -35,19 +35,19 @@ public class GameState : MonoBehaviour
         previousState = currentState;
         currentState = newState;
 
-        if (newState == "Exploration"){
+        if (newState == getExplorationName()){
             changeExploration();
         }
-        else if (newState == "Simulation"){
+        else if (newState == getSimulationName()){
             changeSimulation();
         }
-        else if (newState == "Lost"){
+        else if (newState == getLostName()){
             changeLost();
         }
-        else if (newState == "Win"){
+        else if (newState == getWinName()){
             changeWin();
         }
-        else if (newState == "Pause"){
+        else if (newState == getPauseName()){
             changePause();
         }
     }
@@ -56,9 +56,9 @@ public class GameState : MonoBehaviour
         character.GetComponent<SimulationMovement>().ResetEverythingFromScratch();
         GameObject Timer =  Utils.GetChildWithName(canvas.gameObject, "Timer");
         Timer.GetComponent<Timer>().Reset();
-        currentState = "Exploration";
-        previousState = "Exploration";
-        SwitchState("Exploration");
+        currentState = getExplorationName();
+        previousState = getExplorationName();
+        SwitchState(getExplorationName());
     }
 
     private void changeExploration(){
@@ -68,6 +68,8 @@ public class GameState : MonoBehaviour
         GameObject buttons_playButton = Utils.GetChildWithName(buttons, "Play Button");
         GameObject buttons_playButton_text = Utils.GetChildWithName(buttons_playButton, "Text");
         buttons_playButton_text.GetComponent<TMPro.TMP_Text>().text = "PLAY";
+        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        joysticks_container.GetComponent<ToggleUIElement>().Show();
     }
 
     private void changeSimulation(){
@@ -93,7 +95,7 @@ public class GameState : MonoBehaviour
     private void changeLost(){
         character.GetComponent<SimulationMovement>().Reset();
         playMessage(0); //Failure
-        SwitchState("Exploration");
+        SwitchState(getExplorationName());
     }
 
     private void changeWin(){
@@ -143,11 +145,11 @@ public class GameState : MonoBehaviour
     }
 
     private void InitializeStates(){
-        States.Add("Exploration", true);
-        States.Add("Simulation", false);
-        States.Add("Lost", false);
-        States.Add("Win", false);
-        States.Add("Pause", false);
+        States.Add(getExplorationName(), true);
+        States.Add(getSimulationName(), false);
+        States.Add(getLostName(), false);
+        States.Add(getWinName(), false);
+        States.Add(getPauseName(), false);
     }
 
     public void playMessage(int success){
@@ -159,6 +161,26 @@ public class GameState : MonoBehaviour
         else{
             message.GetComponent<ActionMessage>().playSuccessMessage();
         }
+    }
+
+    public string getSimulationName(){
+        return SimulationName;
+    }
+
+    public string getExplorationName(){
+        return ExplorationName;
+    }
+
+    public string getLostName(){
+        return LostName;
+    }
+
+    public string getWinName(){
+        return WinName;
+    }
+
+    public string getPauseName(){
+        return PauseName;
     }
 
 }

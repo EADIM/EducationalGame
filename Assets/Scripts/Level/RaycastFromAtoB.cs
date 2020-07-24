@@ -18,7 +18,7 @@ public class RaycastFromAtoB : MonoBehaviour
     private void FixedUpdate() {
         A_Pos = StartPoint.transform.position;
         direction = Vector3.forward * MaxRayDistance;
-        if(transform.gameObject.GetComponent<GameState>().States["Simulation"] || debug){
+        if(transform.gameObject.GetComponent<GameState>().States[transform.gameObject.GetComponent<GameState>().getSimulationName()] || debug){
             if (Physics.Raycast(A_Pos, StartPoint.transform.TransformDirection(direction), out hitInfo, MaxRayDistance)){
                 
                 /*
@@ -30,12 +30,13 @@ public class RaycastFromAtoB : MonoBehaviour
                 */
 
                 if (hitInfo.transform.tag == "Player"){
-                    Debug.Log("Raycast acertou o " + player.transform.name);
+                    //Debug.Log("Raycast acertou o " + player.transform.name);
                     Debug.DrawRay(A_Pos, StartPoint.transform.TransformDirection(direction), Color.green);
                     
                     player_sm.Jump();
                     player_sm.canMove = false;
                     player_sm.didJumpMid = true;
+                    player_sm.dontAccelerate = true;
 
                     if (player_sm.factor > 0){
                         player_sm.zeroFactor();

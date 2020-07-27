@@ -9,8 +9,9 @@
 - Distância aleatórias da segunda e da terceira plataformas.
 - Botão para reiniciar a fase.
 
-**Elementos a serem alterados:**
+**Sugestões:**
 - Rotacionar a câmera usando o movimento swipe.
+- Iniciar o timer quando a simulação iniciar e parar quando a simulação parar.
 
 
 ## Tela inicial:

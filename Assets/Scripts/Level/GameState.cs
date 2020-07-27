@@ -140,6 +140,32 @@ public class GameState : MonoBehaviour
         pauseMenu.GetComponent<ToggleUIElement>().Hide();
     }
 
+    public void FreezeUI(){
+        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        FreezeElement(buttons);
+        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        FreezeElement(levelStats);
+        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        FreezeElement(joysticks_container);
+    }
+
+    private void FreezeElement(GameObject elem){
+        Utils.Freeze(elem.GetComponent<CanvasGroup>());
+    }
+
+    public void UnfreezeUI(){
+        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        UnfreezeElement(buttons);
+        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        UnfreezeElement(levelStats);
+        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        UnfreezeElement(joysticks_container);
+    }
+
+    private void UnfreezeElement(GameObject elem){
+        Utils.Unfreeze(elem.GetComponent<CanvasGroup>());
+    }
+
     public void SwitchToPreviousState(){
         SwitchState(previousState);
     }

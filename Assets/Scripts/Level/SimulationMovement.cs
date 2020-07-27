@@ -32,14 +32,17 @@ public class SimulationMovement : MonoBehaviour
     public Vector3 currentPosition;
     public Vector3 previousPosition;
 
-
-
     public bool ObjIsMoving = true;
     public bool ischecking = false;
     public bool dontAccelerate = false;
 
     [SerializeField]
     private bool debugWin = false;
+
+    private GameObject map;
+
+    private GameObject midCollider;
+    private GameObject finalCollider;
 
     private void Awake() 
     {
@@ -55,6 +58,13 @@ public class SimulationMovement : MonoBehaviour
         canMove = gameState.States[gameState.getSimulationName()];
         currentPosition = transform.position;
         previousPosition = transform.position;
+        map = GameObject.Find("Mapa");
+        GameObject temp = Utils.GetChildWithName(map.gameObject, "Stairway_Balcony_3X1");
+        GameObject midPlatform = Utils.GetChildWithName(temp.gameObject, "PLATAFORMA DO MEIO - Deck_FloorCeiling_01_snaps002 (7)");
+        GameObject finalPlatform = Utils.GetChildWithName(temp.gameObject, "PLATAFORMA FINAL - Deck_FloorCeiling_01_snaps002 (8)");
+        midCollider = Utils.GetChildWithName(midPlatform, "PM - Collider");
+        finalCollider = Utils.GetChildWithName(finalPlatform, "PF - Collider");
+
     }
 
     private void Update()
@@ -103,6 +113,10 @@ public class SimulationMovement : MonoBehaviour
     {
         string tag = other.gameObject.tag;
 
+        if(gameState.States[gameState.getExplorationName()] && checkpoints.Count == 0){
+            checkpoints.Add(new Checkpoint(transform.position, transform.rotation, factor, false, false));
+        }
+
         if(gameState.States[gameState.getSimulationName()])
         {
             if (!CollidablePlaces[tag])
@@ -119,7 +133,6 @@ public class SimulationMovement : MonoBehaviour
                     if(checkpoints.Count == 0)
                     {
                         checkpoints.Add(new Checkpoint(transform.position, transform.rotation, factor, false, false));
-                        gameState.playMessage(1);
                     }
                     else if (!ObjIsMoving)
                     {
@@ -131,7 +144,8 @@ public class SimulationMovement : MonoBehaviour
                 {
                     if(!ObjIsMoving && checkpoints.Count == 1)
                     {
-                        checkpoints.Add(new Checkpoint(transform.position, checkpoints[0].getRotation(), 0.0f, true, false));
+                        Vector3 pos = new Vector3(midCollider.transform.position.x, midCollider.transform.position.y + 5, midCollider.transform.position.z);
+                        checkpoints.Add(new Checkpoint(pos, checkpoints[0].getRotation(), 0.0f, true, false));
                         gameState.playMessage(1);
                         Reset(checkpoints[checkpoints.Count - 1]);
                         gameState.SwitchState(gameState.getExplorationName());
@@ -143,7 +157,7 @@ public class SimulationMovement : MonoBehaviour
                         { 
                             if(gameState.States[gameState.getSimulationName()])
                             {
-                                Jump();
+                                Jump(acceleration);
                                 didJumpFinal = true;
                             }
                         }
@@ -159,7 +173,7 @@ public class SimulationMovement : MonoBehaviour
                 {
                     if (!ObjIsMoving && checkpoints.Count == 2)
                     {    
-                        checkpoints.Add(new Checkpoint(transform.position, checkpoints[0].getRotation(), 0.0f, true, true));
+                        checkpoints.Add(new Checkpoint(finalCollider.transform.position, checkpoints[0].getRotation(), 0.0f, true, true));
                         gameState.playMessage(1);
                         gameState.SwitchState(gameState.getWinName());
                     }
@@ -297,6 +311,25 @@ public class SimulationMovement : MonoBehaviour
             Debug.Log("Speed: "+ rb.velocity.magnitude + " V0: " + V0 + " Vz: " + Vz + " Vy: " + Vy);
 
             Vector3 force = new Vector3(0, Vy, 0);
+            Debug.Log("force = ("+ force.x + ", "+ force.y + ", " + force.z + ")");
+            Debug.Log("gravidade: " + gravity);
+            float reach = (2 * Mathf.Pow(V0, 2) * Mathf.Cos(Mathf.Deg2Rad * jumpAngle) * Mathf.Sin(Mathf.Deg2Rad * jumpAngle)) / -gravity;
+            Debug.Log("Alcance: " + reach);
+
+            rb.AddForce(force,  ForceMode.VelocityChange);
+            jumping = true;
+        }
+    }
+
+    public void Jump(float Vz)
+    {
+        if(!jumping){
+            float V0 = findV0UsingVx(Vz, jumpAngle);
+            float Vy = findVyUsingV0(V0, jumpAngle);
+
+            Debug.Log("Speed: "+ rb.velocity.magnitude + " V0: " + V0 + " Vz: " + Vz + " Vy: " + Vy);
+
+            Vector3 force = new Vector3(0, Vy, Vz);
             Debug.Log("force = ("+ force.x + ", "+ force.y + ", " + force.z + ")");
             Debug.Log("gravidade: " + gravity);
             float reach = (2 * Mathf.Pow(V0, 2) * Mathf.Cos(Mathf.Deg2Rad * jumpAngle) * Mathf.Sin(Mathf.Deg2Rad * jumpAngle)) / -gravity;

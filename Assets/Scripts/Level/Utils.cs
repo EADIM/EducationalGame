@@ -27,6 +27,16 @@ public class Utils : MonoBehaviour
         canvasGroup.interactable = true;
     }
 
+    public static void Freeze(CanvasGroup canvasGroup){
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.interactable = false;
+    }
+
+    public static void Unfreeze(CanvasGroup canvasGroup){
+        canvasGroup.blocksRaycasts = true;
+        canvasGroup.interactable = true;
+    }
+
     public bool checkIfObjectIsStill(GameObject obj){
 
         bool ObjIsMoving = false;

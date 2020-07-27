@@ -94,7 +94,7 @@ public class GameState : MonoBehaviour
 
     private void changeLost(){
         character.GetComponent<SimulationMovement>().Reset();
-        playMessage(0); //Failure
+        //playMessage(0); //Failure
         SwitchState(getExplorationName());
     }
 

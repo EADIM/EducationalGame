@@ -103,7 +103,6 @@ public class SimulationMovement : MonoBehaviour
         if (!CollidablePlaces[tag])
         {
             //Collision with forbidden object
-            //Debug.Log("PROIBIDO: Colisão com " + tag);
             gameState.SwitchState(gameState.getLostName());
 
         }
@@ -112,6 +111,8 @@ public class SimulationMovement : MonoBehaviour
     private void OnCollisionStay(Collision other)
     {
         string tag = other.gameObject.tag;
+
+        Debug.Log("Colidiu com " + tag);
 
         if(gameState.States[gameState.getExplorationName()] && checkpoints.Count == 0){
             checkpoints.Add(new Checkpoint(transform.position, transform.rotation, factor, false, false));
@@ -146,7 +147,7 @@ public class SimulationMovement : MonoBehaviour
                     {
                         Vector3 pos = new Vector3(midCollider.transform.position.x, midCollider.transform.position.y + 5, midCollider.transform.position.z);
                         checkpoints.Add(new Checkpoint(pos, checkpoints[0].getRotation(), 0.0f, true, false));
-                        gameState.playMessage(1);
+                        //gameState.playMessage(1);
                         Reset(checkpoints[checkpoints.Count - 1]);
                         gameState.SwitchState(gameState.getExplorationName());
                     }
@@ -174,7 +175,7 @@ public class SimulationMovement : MonoBehaviour
                     if (!ObjIsMoving && checkpoints.Count == 2)
                     {    
                         checkpoints.Add(new Checkpoint(finalCollider.transform.position, checkpoints[0].getRotation(), 0.0f, true, true));
-                        gameState.playMessage(1);
+                        //gameState.playMessage(1);
                         gameState.SwitchState(gameState.getWinName());
                     }
                 }
@@ -402,6 +403,7 @@ public class SimulationMovement : MonoBehaviour
         CollidablePlaces.Add("FinalPlatform", true);
         CollidablePlaces.Add("MidPlatform-Collider", true);
         CollidablePlaces.Add("FinalPlatform-Collider", true);
+        CollidablePlaces.Add("Boundaries", true);
     }
 
 }

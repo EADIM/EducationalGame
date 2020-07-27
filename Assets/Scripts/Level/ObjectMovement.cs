@@ -15,6 +15,8 @@ public class ObjectMovement : MonoBehaviour
 
     public bool AllowMovement = true;
 
+    public BoxCollider mapBoundaries;
+
     void Update()
     {
         if (AllowMovement){
@@ -49,7 +51,27 @@ public class ObjectMovement : MonoBehaviour
         upMov *= Time.deltaTime * camMovSpeed;
 
         Vector3 pos = new Vector3(hMov, upMov, vMov);
-        gameObj.transform.Translate(pos);
+        pos += transform.position;
+
+        /*
+        Debug.Log(  "CurrentPos = " + transform.position.ToString() +
+                    " NextPos = " + pos.ToString() +
+                    "\nBoundaries Min = " + mapBoudaries.bounds.min.ToString() + 
+                    " Boundaries Max = " + mapBoudaries.bounds.max.ToString()
+                );
+        */
+
+        if(mapBoundaries.enabled){
+            pos.x = Mathf.Clamp(pos.x, mapBoundaries.bounds.min.x,mapBoundaries.bounds.max.x);
+            pos.y = Mathf.Clamp(pos.y, mapBoundaries.bounds.min.y,mapBoundaries.bounds.max.y);
+            pos.z = Mathf.Clamp(pos.z, mapBoundaries.bounds.min.z,mapBoundaries.bounds.max.z);
+        }
+
+        //Debug.Log("Clamped position = " + pos.ToString());
+
+        transform.position = pos;
+        
+        //gameObj.transform.Translate(pos);
     }
 
     private void getRotationInput(){

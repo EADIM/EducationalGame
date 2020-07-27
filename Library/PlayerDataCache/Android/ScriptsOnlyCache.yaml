@@ -1,7 +1,5 @@
 ScriptsOnlyBuild:
   usedScripts:
-    Assembly-CSharp-Editor.dll:
-    - ReadmeEditor
     Assembly-CSharp.dll:
     - ActionMessage
     - ChangePlayerPosition
@@ -21,7 +19,6 @@ ScriptsOnlyBuild:
     - PlayerCamera
     - PlayerDetector
     - RaycastFromAtoB
-    - Readme
     - SetValueOnCharacter
     - SettingsMenu
     - ShowFPS
@@ -367,7 +364,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 14136}
     - Class: 114
-      Script: {instanceID: 34554}
+      Script: {instanceID: 507836}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -937,7 +934,7 @@ ScriptsOnlyBuild:
     className: AnimationTrack
   - hash:
       serializedVersion: 2
-      Hash: d2c7ad4f49de3b53c443108be3ca03ec
+      Hash: 00a78066cc845540ab28a4acacdf9bf2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ObjectMovement
@@ -1483,4 +1480,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/Level01.unity
   - Assets/Scenes/Level02.unity
   - Assets/Scenes/Level03.unity
-  playerPath: D:/Projects/Unity/EG-1/EG-4.apk
+  playerPath: D:/Projects/Unity/EG-1/EG-4-CamSemLimites.apk

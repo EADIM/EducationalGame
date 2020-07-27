@@ -15,6 +15,7 @@ TagManager:
   - Ceiling
   - MidPlatform-Collider
   - FinalPlatform-Collider
+  - Boundaries
   layers:
   - Default
   - TransparentFX

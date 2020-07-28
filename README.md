@@ -1,18 +1,5 @@
 # EducationalGame
 
-**Bugs conhecidos:**
-- Câmera rotacionando e se movendo aleatoriamente ao colidir e ultrapassar os limites do mapa.
-- Animação do sucesso ou fracasso da ação só sendo iniciada uma vez.
-- Tela de vitória não aparecendo após vencer pela segunda vez.
-
-**Features que ainda faltam ser implementadas:**
-- Distância aleatórias da segunda e da terceira plataformas.
-- Botão para reiniciar a fase.
-
-**Sugestões:**
-- Rotacionar a câmera usando o movimento swipe.
-- Iniciar o timer quando a simulação iniciar e parar quando a simulação parar.
-
 
 ## Tela inicial:
 ![alt text](https://github.com/EADIM/EducationalGame/blob/master/README_Files/StartScene_IMG.png)

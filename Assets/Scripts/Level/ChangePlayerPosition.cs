@@ -9,10 +9,12 @@ public class ChangePlayerPosition : MonoBehaviour
 
     SimulationMovement sm;
     GameState gms;
+    GetProblemInfo gpi;
 
     private void Start() {
         sm = player.GetComponent<SimulationMovement>();
         gms = gameStateObject.GetComponent<GameState>();
+        gpi = gameStateObject.GetComponent<GetProblemInfo>();
     }
 
     private void OnMouseDown() {
@@ -22,6 +24,8 @@ public class ChangePlayerPosition : MonoBehaviour
             if(sm.checkpoints.Count > 0){
                 Vector3 newPosition = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
                 player.GetComponent<SimulationMovement>().checkpoints[0].setPosition(newPosition);
+                gpi.ColisorPlataformaInicial = transform.GetComponent<BoxCollider>();
+                gpi.OnIntialPlatformChange();
             }
             sm.ResetPosition(sm.checkpoints[0]);
         }

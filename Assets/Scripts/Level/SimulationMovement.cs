@@ -14,7 +14,6 @@ public class SimulationMovement : MonoBehaviour
     public float factor = 1.0f; 
     public bool canMove = false;   
 
-    private GameObject thisParent;
     private GameState gameState;
     private Rigidbody rb;
 
@@ -38,11 +37,10 @@ public class SimulationMovement : MonoBehaviour
 
     [SerializeField]
     private bool debugWin = false;
+    
+    public GameObject midCollider;
+    public GameObject finalCollider;
 
-    private GameObject map;
-
-    private GameObject midCollider;
-    private GameObject finalCollider;
 
     private void Awake() 
     {
@@ -58,13 +56,7 @@ public class SimulationMovement : MonoBehaviour
         canMove = gameState.States[gameState.getSimulationName()];
         currentPosition = transform.position;
         previousPosition = transform.position;
-        map = GameObject.Find("Mapa");
-        GameObject temp = Utils.GetChildWithName(map.gameObject, "Stairway_Balcony_3X1");
-        GameObject midPlatform = Utils.GetChildWithName(temp.gameObject, "PLATAFORMA DO MEIO - Deck_FloorCeiling_01_snaps002 (7)");
-        GameObject finalPlatform = Utils.GetChildWithName(temp.gameObject, "PLATAFORMA FINAL - Deck_FloorCeiling_01_snaps002 (8)");
-        midCollider = Utils.GetChildWithName(midPlatform, "PM - Collider");
-        finalCollider = Utils.GetChildWithName(finalPlatform, "PF - Collider");
-
+        Application.targetFrameRate = 300;
     }
 
     private void Update()
@@ -72,6 +64,7 @@ public class SimulationMovement : MonoBehaviour
         canMove = gameState.States[gameState.getSimulationName()];
         previousPosition = currentPosition;
         currentPosition = transform.position;
+        
         if(debugWin){
             windWhenSelected();
             debugWin = false;
@@ -92,7 +85,7 @@ public class SimulationMovement : MonoBehaviour
 
     public void MoveCharacter()
     {
-        rb.AddForce(Vector3.forward * acceleration * transform.localScale.z, ForceMode.Force);
+        rb.AddForce(-Vector3.forward * acceleration * transform.localScale.z, ForceMode.Force);
         moved = true;  
     }
 
@@ -112,7 +105,7 @@ public class SimulationMovement : MonoBehaviour
     {
         string tag = other.gameObject.tag;
 
-        Debug.Log("Colidiu com " + tag);
+        //Debug.Log("Colidiu com " + tag);
 
         if(gameState.States[gameState.getExplorationName()] && checkpoints.Count == 0){
             checkpoints.Add(new Checkpoint(transform.position, transform.rotation, factor, false, false));
@@ -123,6 +116,7 @@ public class SimulationMovement : MonoBehaviour
             if (!CollidablePlaces[tag])
             {
                 //Collision with forbidden object
+                Debug.Log("Colidiu com " + tag);
                 gameState.SwitchState(gameState.getLostName());
             }
 
@@ -158,7 +152,7 @@ public class SimulationMovement : MonoBehaviour
                         { 
                             if(gameState.States[gameState.getSimulationName()])
                             {
-                                Jump(acceleration);
+                                Jump(false);
                                 didJumpFinal = true;
                             }
                         }
@@ -301,36 +295,25 @@ public class SimulationMovement : MonoBehaviour
         return value;
     }
 
-    public void Jump()
+    public void Jump(bool useVz)
     {
         if(!jumping){
             float Vx = 0.0f;
-            float Vz = rb.velocity.z;
+            float Vz = acceleration;
+            float angle = 0.0f;
+            if(jumpAngle > 45.0f){
+
+            }
+            if (useVz)
+            {
+                Vz = rb.velocity.z;
+            }
             float V0 = findV0UsingVx(Vz, jumpAngle);
             float Vy = findVyUsingV0(V0, jumpAngle);
 
             Debug.Log("Speed: "+ rb.velocity.magnitude + " V0: " + V0 + " Vz: " + Vz + " Vy: " + Vy);
 
-            Vector3 force = new Vector3(0, Vy, 0);
-            Debug.Log("force = ("+ force.x + ", "+ force.y + ", " + force.z + ")");
-            Debug.Log("gravidade: " + gravity);
-            float reach = (2 * Mathf.Pow(V0, 2) * Mathf.Cos(Mathf.Deg2Rad * jumpAngle) * Mathf.Sin(Mathf.Deg2Rad * jumpAngle)) / -gravity;
-            Debug.Log("Alcance: " + reach);
-
-            rb.AddForce(force,  ForceMode.VelocityChange);
-            jumping = true;
-        }
-    }
-
-    public void Jump(float Vz)
-    {
-        if(!jumping){
-            float V0 = findV0UsingVx(Vz, jumpAngle);
-            float Vy = findVyUsingV0(V0, jumpAngle);
-
-            Debug.Log("Speed: "+ rb.velocity.magnitude + " V0: " + V0 + " Vz: " + Vz + " Vy: " + Vy);
-
-            Vector3 force = new Vector3(0, Vy, Vz);
+            Vector3 force = new Vector3(0, -Vy, 0);
             Debug.Log("force = ("+ force.x + ", "+ force.y + ", " + force.z + ")");
             Debug.Log("gravidade: " + gravity);
             float reach = (2 * Mathf.Pow(V0, 2) * Mathf.Cos(Mathf.Deg2Rad * jumpAngle) * Mathf.Sin(Mathf.Deg2Rad * jumpAngle)) / -gravity;

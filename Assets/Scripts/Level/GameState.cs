@@ -18,6 +18,8 @@ public class GameState : MonoBehaviour
     private string LostName = "Lost";
     private string PauseName = "Pause";
 
+    public float UnitScale = 1.0f;
+
     private void Awake()
     {
         InitializeStates();    

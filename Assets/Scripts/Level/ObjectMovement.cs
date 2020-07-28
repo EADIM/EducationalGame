@@ -27,11 +27,11 @@ public class ObjectMovement : MonoBehaviour
 
     private void getMovementInput(){
 
-        float joyHInput = leftJoystick.Horizontal;
-        float joyVInput = leftJoystick.Vertical;
+        float joyHInput = -leftJoystick.Horizontal;
+        float joyVInput = -leftJoystick.Vertical;
 
-        float keyboardHInput = Input.GetAxis("Horizontal");
-        float keyboardVInput = Input.GetAxis("Vertical");
+        float keyboardHInput = -Input.GetAxis("Horizontal");
+        float keyboardVInput = -Input.GetAxis("Vertical");
 
         float hMov = (keyboardHInput + joyHInput) * Time.deltaTime * camMovSpeed;
         float vMov = (keyboardVInput + joyVInput) * Time.deltaTime * camMovSpeed;
@@ -51,7 +51,7 @@ public class ObjectMovement : MonoBehaviour
         upMov *= Time.deltaTime * camMovSpeed;
 
         Vector3 pos = new Vector3(hMov, upMov, vMov);
-        pos += transform.position;
+        pos += transform.localPosition;
 
         /*
         Debug.Log(  "CurrentPos = " + transform.position.ToString() +
@@ -69,7 +69,7 @@ public class ObjectMovement : MonoBehaviour
 
         //Debug.Log("Clamped position = " + pos.ToString());
 
-        transform.position = pos;
+        transform.localPosition = pos;
         
         //gameObj.transform.Translate(pos);
     }

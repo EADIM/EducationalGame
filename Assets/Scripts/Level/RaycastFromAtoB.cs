@@ -17,23 +17,14 @@ public class RaycastFromAtoB : MonoBehaviour
 
     private void FixedUpdate() {
         A_Pos = StartPoint.transform.position;
-        direction = Vector3.forward * MaxRayDistance;
+        direction = Vector3.right * MaxRayDistance;
         if(transform.gameObject.GetComponent<GameState>().States[transform.gameObject.GetComponent<GameState>().getSimulationName()] || debug){
             if (Physics.Raycast(A_Pos, StartPoint.transform.TransformDirection(direction), out hitInfo, MaxRayDistance)){
-                
-                /*
-                Debug.Log(
-                    "name: " + hitInfo.transform.name +
-                    " tag: " + hitInfo.transform.tag +
-                    " position: " + hitInfo.transform.position
-                );
-                */
 
                 if (hitInfo.transform.tag == "Player"){
-                    //Debug.Log("Raycast acertou o " + player.transform.name);
                     Debug.DrawRay(A_Pos, StartPoint.transform.TransformDirection(direction), Color.green);
                     
-                    player_sm.Jump();
+                    player_sm.Jump(true);
                     player_sm.canMove = false;
                     player_sm.didJumpMid = true;
                     player_sm.dontAccelerate = true;
@@ -46,8 +37,6 @@ public class RaycastFromAtoB : MonoBehaviour
                     Debug.DrawRay(A_Pos, StartPoint.transform.TransformDirection(direction), Color.blue);
                 }
             }
-
-            //player_rb.AddForce(Physics.gravity, ForceMode.Acceleration);
         }
     }
 

@@ -43,7 +43,8 @@
      <Compile Include="Assets\Joystick Pack\Scripts\Joysticks\FixedJoystick.cs" />
      <Compile Include="Assets\Joystick Pack\Scripts\Joysticks\FloatingJoystick.cs" />
      <Compile Include="Assets\Joystick Pack\Scripts\Joysticks\VariableJoystick.cs" />
-     <Compile Include="Assets\Package_Fase01\AssetStoreOriginals\_SNAPS_PrototypingAssets\About\Scripts\Readme.cs" />
+     <Compile Include="Assets\Package_Fase01\Jammo-Character\Scripts\CharacterSkinController.cs" />
+     <Compile Include="Assets\Package_Fase01\Jammo-Character\Scripts\MovementInput.cs" />
      <Compile Include="Assets\Scripts\Level Selector\LevelSelector.cs" />
      <Compile Include="Assets\Scripts\Level\ChangePlayerPosition.cs" />
      <Compile Include="Assets\Scripts\Level\Checkpoint.cs" />
@@ -690,6 +691,18 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
         <HintPath>C:/Users/joao_/Documents/EADIM/EducationalGame/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Cinemachine">
+        <HintPath>C:/Users/joao_/Documents/EADIM/EducationalGame/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Recorder.Editor">
+        <HintPath>C:/Users/joao_/Documents/EADIM/EducationalGame/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Recorder">
+        <HintPath>C:/Users/joao_/Documents/EADIM/EducationalGame/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
+    </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+        <HintPath>C:/Users/joao_/Documents/EADIM/EducationalGame/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

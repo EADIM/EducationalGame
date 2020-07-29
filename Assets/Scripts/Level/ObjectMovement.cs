@@ -25,7 +25,8 @@ public class ObjectMovement : MonoBehaviour
         }
     }
 
-    private void getMovementInput(){
+    private void getMovementInput()
+    {
 
         float joyHInput = -leftJoystick.Horizontal;
         float joyVInput = -leftJoystick.Vertical;
@@ -37,29 +38,20 @@ public class ObjectMovement : MonoBehaviour
         float vMov = (keyboardVInput + joyVInput) * Time.deltaTime * camMovSpeed;
         float upMov = 0.0f;
 
-        //printStuff(joyHInput, joyVInput, "joyHInput", "joyVInput");
-        //printStuff(keyboardHInput, keyboardVInput, "keyBoardH", "keyBoardV");
-
-        if(Input.GetKey(KeyCode.Space)){
+        if(Input.GetKey(KeyCode.Space))
+        {
             upMov += verticalSpeed;
         }
 
-        if(Input.GetKey(KeyCode.LeftAlt)){
+        if(Input.GetKey(KeyCode.LeftAlt))
+        {
             upMov -= verticalSpeed;
         }
 
         upMov *= Time.deltaTime * camMovSpeed;
 
         Vector3 pos = new Vector3(hMov, upMov, vMov);
-        pos += transform.localPosition;
-
-        /*
-        Debug.Log(  "CurrentPos = " + transform.position.ToString() +
-                    " NextPos = " + pos.ToString() +
-                    "\nBoundaries Min = " + mapBoudaries.bounds.min.ToString() + 
-                    " Boundaries Max = " + mapBoudaries.bounds.max.ToString()
-                );
-        */
+        pos += transform.position;
 
         if(mapBoundaries.enabled){
             pos.x = Mathf.Clamp(pos.x, mapBoundaries.bounds.min.x,mapBoundaries.bounds.max.x);
@@ -67,14 +59,13 @@ public class ObjectMovement : MonoBehaviour
             pos.z = Mathf.Clamp(pos.z, mapBoundaries.bounds.min.z,mapBoundaries.bounds.max.z);
         }
 
-        //Debug.Log("Clamped position = " + pos.ToString());
+        Debug.Log("Clamped position = " + pos.ToString());
 
-        transform.localPosition = pos;
-        
-        //gameObj.transform.Translate(pos);
+        transform.position = pos;
     }
 
-    private void getRotationInput(){
+    private void getRotationInput()
+    {
         float hRot = 0.0f;
         float vRot = 0.0f;
 
@@ -114,13 +105,15 @@ public class ObjectMovement : MonoBehaviour
         gameObj.transform.Rotate(rot);
     }
 
-    private void printStuff(float hMov, float vMov, string hstr, string vstr){
+    private void printStuff(float hMov, float vMov, string hstr, string vstr)
+    {
         Debug.Log(
             "\n" + hstr + ": " + hMov + 
             " || " + vstr + ": " + vMov + "\n");
     }
 
-    public void switchMovement(){
+    public void switchMovement()
+    {
         AllowMovement = !AllowMovement;
     }
 }

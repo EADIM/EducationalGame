@@ -32382,6 +32382,8 @@ MonoBehaviour:
   debugWin: 0
   midCollider: {fileID: 1073304704}
   finalCollider: {fileID: 1060220458}
+  initialPosition: {fileID: 0}
+  timeTaken: 0
 --- !u!54 &544846273
 Rigidbody:
   m_ObjectHideFlags: 0

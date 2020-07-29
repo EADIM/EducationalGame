@@ -41,11 +41,22 @@ public class SimulationMovement : MonoBehaviour
     public GameObject midCollider;
     public GameObject finalCollider;
 
+    [SerializeField]
+    public BoxCollider initialPosition;
+
+    [SerializeField]
+    private float timeTaken = 0.0f;
 
     private void Awake() 
     {
+        Vector3 boxPos = new Vector3(initialPosition.transform.position.x, transform.position.y, initialPosition.transform.position.z);
         InitializeCollidablePlaces();
-        checkpoints.Add(new Checkpoint(transform.position, transform.rotation, factor));
+        checkpoints.Add(new Checkpoint(
+            boxPos,
+            transform.rotation,
+            factor)
+        );
+        transform.position = boxPos;
     }
 
     private void Start() 
@@ -64,6 +75,8 @@ public class SimulationMovement : MonoBehaviour
         canMove = gameState.States[gameState.getSimulationName()];
         previousPosition = currentPosition;
         currentPosition = transform.position;
+
+        if(gameState.States[gameState.getSimulationName()]) timeTaken += Time.deltaTime;
         
         if(debugWin){
             windWhenSelected();
@@ -79,13 +92,13 @@ public class SimulationMovement : MonoBehaviour
                 MoveCharacter();
         }
 
-        if (gameState.States[gameState.getSimulationName()]) checkIfObjectIsMoving();
+        //if (gameState.States[gameState.getSimulationName()]) checkIfObjectIsMoving();
         //ObjIsMoving = (!rb.IsSleeping() && (rb.velocity.magnitude > 0.05f) == true);
     }
 
     public void MoveCharacter()
     {
-        rb.AddForce(-Vector3.forward * acceleration * transform.localScale.z, ForceMode.Force);
+        rb.AddForce(-Vector3.forward * acceleration * 30, ForceMode.Force);
         moved = true;  
     }
 
@@ -196,6 +209,7 @@ public class SimulationMovement : MonoBehaviour
         didJumpMid = ckp.getJumpMid();
         didJumpFinal = ckp.getJumpFinal();
         moved = false;
+        timeTaken = 0.0f;
 
         if(checkpoints.Count == 1){
             dontAccelerate = false;
@@ -298,12 +312,7 @@ public class SimulationMovement : MonoBehaviour
     public void Jump(bool useVz)
     {
         if(!jumping){
-            float Vx = 0.0f;
             float Vz = acceleration;
-            float angle = 0.0f;
-            if(jumpAngle > 45.0f){
-
-            }
             if (useVz)
             {
                 Vz = rb.velocity.z;
@@ -311,7 +320,8 @@ public class SimulationMovement : MonoBehaviour
             float V0 = findV0UsingVx(Vz, jumpAngle);
             float Vy = findVyUsingV0(V0, jumpAngle);
 
-            Debug.Log("Speed: "+ rb.velocity.magnitude + " V0: " + V0 + " Vz: " + Vz + " Vy: " + Vy);
+            Debug.Log("Speed: "+ rb.velocity.magnitude + "\nV0: " + V0 + "\nVz: " + Vz + "\nVy: " + Vy);
+            Debug.Log("Tempo decorrido: " + timeTaken);
 
             Vector3 force = new Vector3(0, -Vy, 0);
             Debug.Log("force = ("+ force.x + ", "+ force.y + ", " + force.z + ")");

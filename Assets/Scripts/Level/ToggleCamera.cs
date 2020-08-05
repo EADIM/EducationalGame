@@ -4,30 +4,37 @@ using UnityEngine;
 
 public class ToggleCamera : MonoBehaviour
 {
-    
-    public Camera exploreCamera;
-    public Camera playerCamera;
+    public Camera Camera01;
+    public Camera Camera02;
 
+    public bool isMain = true;
     private bool isSwitch = false;
 
+
     private void Start() {
-        exploreCamera.enabled = true;
-        playerCamera.enabled = false;
+        if(isMain){
+            Camera01.enabled = true;
+            Camera02.enabled = false;
+        }
+        else{
+            Camera01.enabled = false;
+            Camera02.enabled = false;
+        }
     }
     
-    public void switchCamera(){
-        exploreCamera.enabled = isSwitch;
-        playerCamera.enabled = !isSwitch;
+    public void switchCameras(){
+        Camera01.enabled = isSwitch;
+        Camera02.enabled = !isSwitch;
         isSwitch = !isSwitch;
     }
 
-    public void switchToExplore(){
-        exploreCamera.enabled = true;
-        playerCamera.enabled = false;
+    public void switchToCamera01(){
+        Camera01.enabled = true;
+        Camera02.enabled = false;
     }
 
-    public void switchToPlayer(){
-        exploreCamera.enabled = false;
-        playerCamera.enabled = true;
+    public void switchToCamera02(){
+        Camera01.enabled = false;
+        Camera02.enabled = true;
     }
 }

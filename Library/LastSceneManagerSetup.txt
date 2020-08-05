@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Package_Fase01/Jammo-Character/Scenes/SampleScene.unity
+- path: Assets/Scenes/Fase01.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

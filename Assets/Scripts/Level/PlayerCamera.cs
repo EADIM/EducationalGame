@@ -5,17 +5,40 @@ using UnityEngine;
 [RequireComponent(typeof(GameObject))]
 public class PlayerCamera : MonoBehaviour
 {
+    public References references;
     public Vector3 distance;
-    public GameObject player;
+    public bool BackCam = true;
+    
+    private GameObject player;
+    
+
+    private void Start() {
+        player = references.Player;
+    }
+
     void Update()
     {
-        transform.SetPositionAndRotation(
-            new Vector3(
+        if(BackCam){
+            transform.SetPositionAndRotation(getBackCamPosition(), transform.rotation);
+        }
+        else{
+            transform.SetPositionAndRotation(getProfileCamPosition(), transform.rotation);
+        }
+    }
+
+    private Vector3 getBackCamPosition(){
+        return new Vector3(
                 player.transform.position.x + distance.x,
                 player.transform.position.y + distance.y,
                 player.transform.position.z + distance.z
-            ),
-            transform.rotation
-        );
+            );
+    }
+
+    private Vector3 getProfileCamPosition(){
+        return new Vector3(
+                transform.position.x,
+                transform.position.y,
+                player.transform.position.z
+            );
     }
 }

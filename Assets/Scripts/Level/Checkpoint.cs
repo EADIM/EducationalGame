@@ -8,40 +8,36 @@ public class Checkpoint
     private Vector3 position;
     [SerializeField]
     private Quaternion rotation;
-    private float factor = 0.0f;
-    private bool didJumpMid = false;
-    private bool didJumpFinal = false;
+    private bool IsPlayerOnInitialPlatform = true;
+    private bool JumpedMid = false;
+    public int jumpstates;
 
     public Checkpoint(){
         this.position = new Vector3();
         this.rotation = new Quaternion();
-        this.factor = 0.0f;
     }
 
     public Checkpoint(Vector3 position){
         this.position = position;
         this.rotation = new Quaternion();
-        this.factor = 0.0f;
     }
 
     public Checkpoint(Vector3 position, Quaternion rotation){
         this.position = position;
         this.rotation = rotation;
-        this.factor = 0.0f;
     }
 
-    public Checkpoint(Vector3 position, Quaternion rotation, float factor){
+    public Checkpoint(Vector3 position, Quaternion rotation, bool IsPlayerOnInitialPlatform){
         this.position = position;
         this.rotation = rotation;
-        this.factor = factor;
+        this.IsPlayerOnInitialPlatform = IsPlayerOnInitialPlatform;
     }
 
-    public Checkpoint(Vector3 position, Quaternion rotation, float factor, bool didJumpMid, bool didJumpFinal){
+    public Checkpoint(Vector3 position, Quaternion rotation, bool IsPlayerOnInitialPlatform, bool JumpedMid){
         this.position = position;
         this.rotation = rotation;
-        this.factor = factor;
-        this.didJumpMid = didJumpMid;
-        this.didJumpFinal = didJumpFinal;
+        this.IsPlayerOnInitialPlatform = IsPlayerOnInitialPlatform;
+        this.JumpedMid = JumpedMid;
     }
 
 
@@ -53,16 +49,12 @@ public class Checkpoint
         return rotation;
     }
 
-    public float getFactor(){
-        return factor;
+    public bool getJumpedMid(){
+        return JumpedMid;
     }
 
-    public bool getJumpMid(){
-        return didJumpMid;
-    }
-
-    public bool getJumpFinal(){
-        return didJumpFinal;
+    public bool GetIsPlayerOnInitialPlatform(){
+        return IsPlayerOnInitialPlatform;
     }
 
     public void setPosition(Vector3 position){
@@ -73,15 +65,12 @@ public class Checkpoint
         this.rotation = rotation;
     }
 
-    public void setFactor(float factor){
-        this.factor = factor;
+    public void setJumpedMid(bool jump){
+        JumpedMid = jump;
     }
 
-    public void setJumpMid(bool jump){
-        didJumpMid = jump;
-    }
-
-    public void setJumpFinal(bool jump){
-        didJumpFinal = jump;
+    public void setIsPlayerOnInitialPlatform(bool value)
+    {
+        IsPlayerOnInitialPlatform = value;
     }
 }

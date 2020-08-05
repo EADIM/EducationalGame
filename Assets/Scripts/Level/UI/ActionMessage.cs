@@ -16,6 +16,8 @@ public class ActionMessage : MonoBehaviour
     private Animator animator = null;
     private TMPro.TMP_Text text = null;
 
+    private string playAnimationName = "MessageGoingUpwards";
+
     public bool reset = false;
 
     private void Start() {
@@ -28,18 +30,19 @@ public class ActionMessage : MonoBehaviour
         //Debug.Log("success message");
         text.text = successMessage;
         text.color = onSuccessColor;
-        animator.SetTrigger("play");
+        //animator[playAnimationName].wrapMode = WrapMode.Once;
+        animator.Play(playAnimationName);
         reset = false;
-        StartCoroutine(resetRoutine());
+        //StartCoroutine(resetRoutine());
     }
 
     public void playFailureMessage(){
         //Debug.Log("failure message");
         text.text = failureMessage;
         text.color = onFailureColor;
-        animator.SetTrigger("play");
+        animator.Play(playAnimationName);
         reset = false;
-        StartCoroutine(resetRoutine());
+        //StartCoroutine(resetRoutine());
     }
 
     public void resetTriggerPlay(){

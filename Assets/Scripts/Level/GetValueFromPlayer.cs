@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class GetValueFromPlayer : MonoBehaviour
 {
-    public GameObject player;
-    private SimulationMovement sim;
+    public References references;
+
+    private PlayerController sim;
     public int attribute = 0;
 
     private void Start() {
-        sim = player.GetComponent<SimulationMovement>();
+        sim = references.Player.GetComponent<PlayerController>();
     }
 
     private void Update() {
@@ -19,16 +20,16 @@ public class GetValueFromPlayer : MonoBehaviour
     private float getAttribute(){
         float value = 0.0f;
         if (attribute == 0){
-            value = sim.acceleration;
+            value = sim.Acceleration;
         }
         else if (attribute == 1){
-            value = sim.jumpAngle;
+            value = sim.JumpAngle;
         }
         else if (attribute == 2){
             value = sim.Mass;
         }
         else if (attribute == 3){
-            value = Mathf.Abs(sim.gravity);
+            value = Mathf.Abs(sim.Gravity);
         }
 
         return value;

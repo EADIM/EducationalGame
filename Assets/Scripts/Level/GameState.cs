@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
-    public GameObject character;
-    public Canvas canvas;
+
+    public References references;
+
+    private GameObject Player;
+    private Canvas Canvas;
     public Dictionary<string, bool> States = new Dictionary<string, bool>();
 
     public string currentState = "Exploration";
@@ -17,14 +20,34 @@ public class GameState : MonoBehaviour
     private string WinName = "Win";
     private string LostName = "Lost";
     private string PauseName = "Pause";
-
+    private ToggleUIElement inputfieldUI;
     public float UnitScale = 1.0f;
+
+    public bool pausedFromUI = false;
 
     private void Awake()
     {
         InitializeStates();    
+        Application.targetFrameRate = 60;
     }
     
+    private void Start() {
+        Player = references.Player;
+        Canvas = references.Canvas.GetComponent<Canvas>();
+        transform.GetComponent<GetProblemInfo>().OnIntialPlatformChange();
+        references.QuestionInfo.GetComponent<SetProblemInfo>().OnInfoChanged(transform.GetComponent<GetProblemInfo>());
+        GameObject inputField = Utils.GetChildWithName(Canvas.gameObject, "Input Container");
+        inputfieldUI = inputField.GetComponent<ToggleUIElement>();
+    }
+
+    private void Update(){
+        if(!inputfieldUI.isVisible){
+            if(Input.GetKey(KeyCode.Escape) && !States[getPauseName()]){
+                SwitchState(getPauseName());
+            }
+        }
+    }
+
     public void SwitchState(string newState){
         Debug.Log("State switched to " + newState, this);
         Dictionary<string, bool>.KeyCollection kc = States.Keys;
@@ -34,7 +57,11 @@ public class GameState : MonoBehaviour
         }
 
         States[newState] = true;
-        previousState = currentState;
+
+        if(currentState != previousState)
+        {
+            previousState = currentState;
+        }
         currentState = newState;
 
         if (newState == getExplorationName()){
@@ -55,8 +82,10 @@ public class GameState : MonoBehaviour
     }
 
     public void ResetValues(){
-        character.GetComponent<SimulationMovement>().ResetEverythingFromScratch();
-        GameObject Timer =  Utils.GetChildWithName(canvas.gameObject, "Timer");
+        references.ExplorerCamera.transform.position = references.ExplorerCamera.GetComponent<CameraController>().InitialPosition;
+        references.ExplorerCamera.transform.rotation = references.ExplorerCamera.GetComponent<CameraController>().InitialRotation;
+        Player.GetComponent<PlayerController>().ResetEverythingFromScratch();
+        GameObject Timer =  Utils.GetChildWithName(Canvas.gameObject, "Timer");
         Timer.GetComponent<Timer>().Reset();
         currentState = getExplorationName();
         previousState = getExplorationName();
@@ -64,90 +93,110 @@ public class GameState : MonoBehaviour
     }
 
     private void changeExploration(){
-        transform.gameObject.GetComponent<ToggleCamera>().switchToExplore();
+        List<Checkpoint> checkpoints = Player.GetComponent<PlayerController>().Checkpoints;
+        if(checkpoints.Count > 0)
+        {
+            if(!pausedFromUI){
+                Player.GetComponent<PlayerController>().Reset(checkpoints[checkpoints.Count - 1]);
+            }
+        }
+        transform.gameObject.GetComponent<ToggleCamera>().switchToCamera01();
+        references.PlayerProfileCamera.GetComponent<Camera>().enabled = false;
         ResumeUIElements();
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
+        GameObject buttons_helpButton = Utils.GetChildWithName(buttons, "Help");
+        buttons_helpButton.GetComponent<ToggleUIElement>().Show();
+        GameObject buttons_switchCameras = Utils.GetChildWithName(buttons, "Switch Cameras");
+        buttons_switchCameras.GetComponent<ToggleUIElement>().Hide();
         GameObject buttons_playButton = Utils.GetChildWithName(buttons, "Play Button");
         GameObject buttons_playButton_text = Utils.GetChildWithName(buttons_playButton, "Text");
         buttons_playButton_text.GetComponent<TMPro.TMP_Text>().text = "PLAY";
-        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         joysticks_container.GetComponent<ToggleUIElement>().Show();
+        pausedFromUI = false;
     }
 
     private void changeSimulation(){
-        transform.gameObject.GetComponent<ToggleCamera>().switchToPlayer();
+        transform.gameObject.GetComponent<ToggleCamera>().switchToCamera02();
+        references.PlayerProfileCamera.GetComponent<Camera>().enabled = false;
         ResumeUIElements();
-        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         joysticks_container.GetComponent<ToggleUIElement>().Hide();
-        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");
         levelStats.GetComponent<ToggleUIElement>().Show();
-        GameObject inputField = Utils.GetChildWithName(canvas.gameObject, "Input Container");
-        inputField.GetComponent<ToggleUIElement>().Hide();
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        inputfieldUI.Hide();
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
+        GameObject buttons_helpButton = Utils.GetChildWithName(buttons, "Help");
+        buttons_helpButton.GetComponent<ToggleUIElement>().Hide();
+        GameObject buttons_switchCameras = Utils.GetChildWithName(buttons, "Switch Cameras");
+        buttons_switchCameras.GetComponent<ToggleUIElement>().Show();
         GameObject buttons_playButton = Utils.GetChildWithName(buttons, "Play Button");
         GameObject buttons_playButton_text = Utils.GetChildWithName(buttons_playButton.gameObject, "Text");
         buttons_playButton_text.GetComponent<TMPro.TMP_Text>().text = "STOP";
     }
 
     private void changePause(){
+        pausedFromUI = true;
         transform.gameObject.GetComponent<GamePause>().PauseGame();
         PauseUIElements();
     }
 
     private void changeLost(){
-        character.GetComponent<SimulationMovement>().Reset();
+        Player.GetComponent<PlayerController>().Reset(Player.GetComponent<PlayerController>().Checkpoints[Player.GetComponent<PlayerController>().Checkpoints.Count - 1]);
         //playMessage(0); //Failure
         SwitchState(getExplorationName());
     }
 
     private void changeWin(){
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
         buttons.GetComponent<ToggleUIElement>().Hide();
-        GameObject inputField = Utils.GetChildWithName(canvas.gameObject, "Input Container");
-        inputField.GetComponent<ToggleUIElement>().Hide();
-        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        inputfieldUI.Hide();
+        GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");
         levelStats.GetComponent<ToggleUIElement>().Hide();
-        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         joysticks_container.GetComponent<ToggleUIElement>().Hide();
-        GameObject winnerWindow = Utils.GetChildWithName(canvas.gameObject, "Winner Window");
+        GameObject winnerWindow = Utils.GetChildWithName(Canvas.gameObject, "Winner Window");
         winnerWindow.GetComponent<ToggleUIElement>().Show();
         GameObject TimeText = Utils.GetChildWithName(winnerWindow.gameObject, "Time Taken");
-        GameObject Timer =  Utils.GetChildWithName(canvas.gameObject, "Timer");
+        GameObject Timer =  Utils.GetChildWithName(Canvas.gameObject, "Timer");
         string text = TimeText.GetComponent<TMPro.TMP_Text>().text;
-        text += Timer.GetComponent<TMPro.TMP_Text>().text;
+        text = text + Timer.GetComponent<TMPro.TMP_Text>().text;
         TimeText.GetComponent<TMPro.TMP_Text>().text = text;
         transform.gameObject.GetComponent<GamePause>().PauseGame();
     }
 
     private void PauseUIElements(){
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        Player.GetComponent<ToggleInputField>().canShow = false;
+        ChangePlayerPosition.canChangePosition = false;
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
         buttons.GetComponent<ToggleUIElement>().Hide();
-        GameObject inputField = Utils.GetChildWithName(canvas.gameObject, "Input Container");
-        inputField.GetComponent<ToggleUIElement>().Hide();
-        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        inputfieldUI.Hide();
+        GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");
         levelStats.GetComponent<ToggleUIElement>().Hide();
-        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         joysticks_container.GetComponent<ToggleUIElement>().Hide();
-        GameObject pauseMenu = Utils.GetChildWithName(canvas.gameObject, "Pause Menu");
+        GameObject pauseMenu = Utils.GetChildWithName(Canvas.gameObject, "Pause Menu");
         pauseMenu.GetComponent<ToggleUIElement>().Show();
     }
 
     private void ResumeUIElements(){
+        Player.GetComponent<ToggleInputField>().canShow = true;
+        ChangePlayerPosition.canChangePosition = true;
         transform.gameObject.GetComponent<GamePause>().ResumeGame();
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
         buttons.GetComponent<ToggleUIElement>().Show();
-        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");
         levelStats.GetComponent<ToggleUIElement>().Show();
-        GameObject pauseMenu = Utils.GetChildWithName(canvas.gameObject, "Pause Menu");
+        GameObject pauseMenu = Utils.GetChildWithName(Canvas.gameObject, "Pause Menu");
         pauseMenu.GetComponent<ToggleUIElement>().Hide();
     }
 
     public void FreezeUI(){
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
         FreezeElement(buttons);
-        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");
         FreezeElement(levelStats);
-        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         FreezeElement(joysticks_container);
     }
 
@@ -156,11 +205,11 @@ public class GameState : MonoBehaviour
     }
 
     public void UnfreezeUI(){
-        GameObject buttons = Utils.GetChildWithName(canvas.gameObject, "Buttons");
+        GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
         UnfreezeElement(buttons);
-        GameObject levelStats = Utils.GetChildWithName(canvas.gameObject, "Level Stats");
+        GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");
         UnfreezeElement(levelStats);
-        GameObject joysticks_container = Utils.GetChildWithName(canvas.gameObject, "Joysticks Container");
+        GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         UnfreezeElement(joysticks_container);
     }
 
@@ -181,7 +230,7 @@ public class GameState : MonoBehaviour
     }
 
     public void playMessage(int success){
-        GameObject message = Utils.GetChildWithName(canvas.gameObject, "Message");
+        GameObject message = Utils.GetChildWithName(Canvas.gameObject, "Action Message");
 
         if (success == 0){    
             message.GetComponent<ActionMessage>().playFailureMessage();

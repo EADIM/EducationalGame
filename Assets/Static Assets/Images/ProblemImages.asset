@@ -1,0 +1,197 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
+  m_Name: ProblemImages
+  m_EditorClassIdentifier: 
+  hashCode: 1570654079
+  material: {fileID: 6883713056034239789}
+  materialHashCode: 0
+  m_Version: 1.1.0
+  spriteSheet: {fileID: 2800000, guid: 1d4f1652de4f2bd42baaa92e0c0d9c94, type: 3}
+  m_SpriteCharacterTable:
+  - m_ElementType: 2
+    m_Unicode: 2147483645
+    m_GlyphIndex: 0
+    m_Scale: 1
+    m_Name: JumpToMid
+    m_HashCode: 363023353
+  - m_ElementType: 2
+    m_Unicode: 3758096303
+    m_GlyphIndex: 1
+    m_Scale: 1
+    m_Name: MidToFinal
+    m_HashCode: 2090537335
+  - m_ElementType: 2
+    m_Unicode: 4294967041
+    m_GlyphIndex: 2
+    m_Scale: 1
+    m_Name: InitialToJump01
+    m_HashCode: -230054394
+  - m_ElementType: 2
+    m_Unicode: 4294967042
+    m_GlyphIndex: 3
+    m_Scale: 1
+    m_Name: InitialToJump02
+    m_HashCode: -230054395
+  m_SpriteGlyphTable:
+  - m_Index: 0
+    m_Metrics:
+      m_Width: 724
+      m_Height: 724
+      m_HorizontalBearingX: 230
+      m_HorizontalBearingY: 0
+      m_HorizontalAdvance: 724
+    m_GlyphRect:
+      m_X: 0
+      m_Y: 512
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 10
+    m_AtlasIndex: 0
+    sprite: {fileID: 0}
+  - m_Index: 1
+    m_Metrics:
+      m_Width: 724
+      m_Height: 724
+      m_HorizontalBearingX: 230
+      m_HorizontalBearingY: 0
+      m_HorizontalAdvance: 724
+    m_GlyphRect:
+      m_X: 512
+      m_Y: 512
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 10
+    m_AtlasIndex: 0
+    sprite: {fileID: 0}
+  - m_Index: 2
+    m_Metrics:
+      m_Width: 724
+      m_Height: 724
+      m_HorizontalBearingX: 230
+      m_HorizontalBearingY: 0
+      m_HorizontalAdvance: 724
+    m_GlyphRect:
+      m_X: 0
+      m_Y: 0
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 10
+    m_AtlasIndex: 0
+    sprite: {fileID: 0}
+  - m_Index: 3
+    m_Metrics:
+      m_Width: 724
+      m_Height: 724
+      m_HorizontalBearingX: 230
+      m_HorizontalBearingY: 0
+      m_HorizontalAdvance: 724
+    m_GlyphRect:
+      m_X: 512
+      m_Y: 0
+      m_Width: 512
+      m_Height: 512
+    m_Scale: 10
+    m_AtlasIndex: 0
+    sprite: {fileID: 0}
+  spriteInfoList:
+  - id: 0
+    x: 0
+    y: 300
+    width: 724
+    height: 724
+    xOffset: -362
+    yOffset: 362
+    xAdvance: 724
+    scale: 1
+    name: JumpToMid
+    hashCode: 363023353
+    unicode: 2147483645
+    pivot: {x: 0.5, y: 0.5}
+    sprite: {fileID: 0}
+  - id: 1
+    x: 724
+    y: 300
+    width: 724
+    height: 724
+    xOffset: -362
+    yOffset: 362
+    xAdvance: 724
+    scale: 1
+    name: MidToFinal
+    hashCode: 2090537335
+    unicode: -536870993
+    pivot: {x: 0.5, y: 0.5}
+    sprite: {fileID: 0}
+  - id: 2
+    x: 0
+    y: -424
+    width: 724
+    height: 724
+    xOffset: -362
+    yOffset: 362
+    xAdvance: 724
+    scale: 1
+    name: InitialToJump01
+    hashCode: -230054394
+    unicode: -255
+    pivot: {x: 0.5, y: 0.5}
+    sprite: {fileID: 0}
+  - id: 3
+    x: 724
+    y: -424
+    width: 724
+    height: 724
+    xOffset: -362
+    yOffset: 362
+    xAdvance: 724
+    scale: 1
+    name: InitialToJump02
+    hashCode: -230054395
+    unicode: -254
+    pivot: {x: 0.5, y: 0.5}
+    sprite: {fileID: 0}
+  fallbackSpriteAssets: []
+--- !u!21 &6883713056034239789
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Sprite
+  m_Shader: {fileID: 4800000, guid: cf81c85f95fe47e1a27f6ae460cf182c, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 1d4f1652de4f2bd42baaa92e0c0d9c94, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}

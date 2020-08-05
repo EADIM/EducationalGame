@@ -5,11 +5,12 @@ using UnityEngine;
 public class OnClickChangeGameState : MonoBehaviour
 {
 
-    public GameObject gameStateObject;
+    public References references;
+
     private GameState gameState;
 
     private void Start() {
-        gameState = gameStateObject.GetComponent<GameState>();
+        gameState = references.GameState.GetComponent<GameState>();
     }
 
     public void changeState(){

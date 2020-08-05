@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class GetProblemInfo : MonoBehaviour
 {
-    public BoxCollider ColisorPlataformaInicial;
-    public BoxCollider ColisorPlataformaDoMeio;
-    public BoxCollider ColisorPlataformaFinal;
-    public GameObject CentroDoRaycastDoPulo;
+    public References references;
     public SetProblemInfo setProblemInfo;
 
+    [SerializeField]
+    public BoxCollider ColisorPlataformaInicial;
+    [SerializeField]
+    private BoxCollider ColisorPlataformaDoMeio;
+    [SerializeField]
+    private BoxCollider ColisorPlataformaFinal;
+    [SerializeField]
+    private GameObject CentroDoRaycastDoPulo;
     [SerializeField]
     private Vector3 dimensaoPlataformaInicial = Vector3.zero;
     [SerializeField]
@@ -23,13 +28,16 @@ public class GetProblemInfo : MonoBehaviour
     [SerializeField]
     private Vector3 distanciaEntreMeioEFinal = Vector3.zero;
 
+    private void Awake() {
+        ColisorPlataformaInicial = references.PlataformaInicial01.GetComponent<BoxCollider>();
+        ColisorPlataformaDoMeio = references.PlataformaDoMeio.GetComponent<BoxCollider>();
+        ColisorPlataformaFinal = references.PlataformaFinal.GetComponent<BoxCollider>();
+        CentroDoRaycastDoPulo = references.RaycastCenter;
+        SetVariables();
+    }
+
     private void Start() {
-        dimensaoPlataformaInicial = ColisorPlataformaInicial.bounds.size;
-        dimensaoPlataformaMeio = ColisorPlataformaDoMeio.bounds.size;
-        dimensaoPlataformaFinal = ColisorPlataformaFinal.bounds.size;
-        distanciaEntreInicialEPulo = CentroDoRaycastDoPulo.transform.position - ColisorPlataformaInicial.bounds.center;
-        distanciaEntrePuloEMeio = ColisorPlataformaDoMeio.bounds.center - CentroDoRaycastDoPulo.transform.position;
-        distanciaEntreMeioEFinal = ColisorPlataformaFinal.bounds.center - ColisorPlataformaDoMeio.bounds.center;
+        SetVariables();
     }
 
     public void OnIntialPlatformChange(){
@@ -37,6 +45,14 @@ public class GetProblemInfo : MonoBehaviour
         setProblemInfo.OnInfoChanged(this);
     }
 
+    private void SetVariables(){
+        dimensaoPlataformaInicial = ColisorPlataformaInicial.bounds.size;
+        dimensaoPlataformaMeio = ColisorPlataformaDoMeio.bounds.size;
+        dimensaoPlataformaFinal = ColisorPlataformaFinal.bounds.size;
+        distanciaEntreInicialEPulo = CentroDoRaycastDoPulo.transform.position - ColisorPlataformaInicial.bounds.center;
+        distanciaEntrePuloEMeio = ColisorPlataformaDoMeio.bounds.center - CentroDoRaycastDoPulo.transform.position;
+        distanciaEntreMeioEFinal = ColisorPlataformaFinal.bounds.center - ColisorPlataformaDoMeio.bounds.center;
+    }
 
     public Vector3 GetDimensaoPlataformaInicial(){
         return dimensaoPlataformaInicial;

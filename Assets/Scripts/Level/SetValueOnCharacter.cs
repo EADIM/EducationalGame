@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class SetValueOnCharacter : MonoBehaviour
 {
+    public References references;
     public TMPro.TMP_InputField inputField;
-    public GameObject Object;
 
     public void setValue(int attribute){
-        SimulationMovement sim = Object.GetComponent<SimulationMovement>();
+        GameObject player = references.Player.gameObject;
+        PlayerController pcont = player.GetComponent<PlayerController>();
         
         if (attribute == 0){
-            sim.setAcceleration(inputField.text);
+            pcont.setAcceleration(inputField.text);
         }
         else if(attribute == 1){
-            sim.setAngle(inputField.text);
+            pcont.setAngle(inputField.text);
         }
     }
 

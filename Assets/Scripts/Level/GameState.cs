@@ -38,6 +38,7 @@ public class GameState : MonoBehaviour
         references.QuestionInfo.GetComponent<SetProblemInfo>().OnInfoChanged(transform.GetComponent<GetProblemInfo>());
         GameObject inputField = Utils.GetChildWithName(Canvas.gameObject, "Input Container");
         inputfieldUI = inputField.GetComponent<ToggleUIElement>();
+        SwitchState(getExplorationName());
     }
 
     private void Update(){
@@ -113,6 +114,7 @@ public class GameState : MonoBehaviour
         buttons_playButton_text.GetComponent<TMPro.TMP_Text>().text = "PLAY";
         GameObject joysticks_container = Utils.GetChildWithName(Canvas.gameObject, "Joysticks Container");
         joysticks_container.GetComponent<ToggleUIElement>().Show();
+        UnfreezeUI();
         pausedFromUI = false;
     }
 
@@ -137,7 +139,7 @@ public class GameState : MonoBehaviour
 
     private void changePause(){
         pausedFromUI = true;
-        transform.gameObject.GetComponent<GamePause>().PauseGame();
+        GamePause.PauseGame();
         PauseUIElements();
     }
 
@@ -162,7 +164,7 @@ public class GameState : MonoBehaviour
         string text = TimeText.GetComponent<TMPro.TMP_Text>().text;
         text = text + Timer.GetComponent<TMPro.TMP_Text>().text;
         TimeText.GetComponent<TMPro.TMP_Text>().text = text;
-        transform.gameObject.GetComponent<GamePause>().PauseGame();
+        GamePause.PauseGame();
     }
 
     private void PauseUIElements(){
@@ -182,7 +184,7 @@ public class GameState : MonoBehaviour
     private void ResumeUIElements(){
         Player.GetComponent<ToggleInputField>().canShow = true;
         ChangePlayerPosition.canChangePosition = true;
-        transform.gameObject.GetComponent<GamePause>().ResumeGame();
+        GamePause.ResumeGame();
         GameObject buttons = Utils.GetChildWithName(Canvas.gameObject, "Buttons");
         buttons.GetComponent<ToggleUIElement>().Show();
         GameObject levelStats = Utils.GetChildWithName(Canvas.gameObject, "Level Stats");

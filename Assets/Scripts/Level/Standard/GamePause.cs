@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class GamePause : MonoBehaviour
 {
-    public void PauseGame(){
+    [SerializeField]
+    private static bool isPaused = false;
+
+    public static void PauseGame(){
         //Debug.Log("Time.timeScale = 0");
         Time.timeScale = 0;
+        isPaused = true;
     }
 
-    public void ResumeGame(){
+    public static void ResumeGame(){
         //Debug.Log("Time.timeScale = 1");
         Time.timeScale = 1;
+        isPaused = false;
     }
 }

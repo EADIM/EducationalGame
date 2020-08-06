@@ -35,8 +35,6 @@ public class RaycastFromAtoB : MonoBehaviour
                 if (hitInfo.transform.tag == "Player")
                 {
                     Debug.DrawRay(A_Pos, StartPoint.transform.TransformDirection(direction), Color.green);
-                    
-                    playerController.StopAnimation(playerController.RunAnimationName);
                     playerController.IsPlayerOnInitialPlatform = false;
                     playerController.Jump();
                 }

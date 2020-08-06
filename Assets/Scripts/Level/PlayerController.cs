@@ -69,7 +69,7 @@ public class PlayerController : PlayerBase
 
     public override void Run()
     {
-        PlayerAnimator.SetBool(RunAnimationName, true);
+        StartAnimation(RunAnimationName);
         if(!PlayerAnimator.GetBool(RunAnimationName))
         {
             PlayerAnimator.Play("Base Layer.Running",  0, 0.0f);   
@@ -84,7 +84,8 @@ public class PlayerController : PlayerBase
             Debug.LogFormat("TimeSpanned = {0} s", TimeSpanned);
             IsJumping = true;
             StopAnimation(RunAnimationName);
-            PlayerAnimator.SetBool(JumpAnimationName, true);
+            StartAnimation(JumpAnimationName);
+            PlayerAnimator.Play("Base Layer.Jump", 0, 0.0f);
             PlayerRigidbody.AddForce(GetJumpVector(), ForceMode.VelocityChange);
         }
     }
@@ -146,7 +147,14 @@ public class PlayerController : PlayerBase
 
     public void StopAnimation(string animationName)
     {
+        Debug.Log("Stopping " + animationName + " animation.");
         PlayerAnimator.SetBool(animationName, false);
+    }
+
+    public void StartAnimation(string animationName)
+    {
+        Debug.Log("Starting " + animationName + " animation.") ;
+        PlayerAnimator.SetBool(animationName, true);
     }
 
     public void StopMovement()
@@ -299,7 +307,7 @@ public class PlayerController : PlayerBase
 
         if ( GSReference.States[GSReference.getSimulationName()] )
         {
-            if (IsPlayerOnInitialPlatform)
+            if (IsPlayerOnInitialPlatform && !IsJumping)
             {
                 Run();
             }

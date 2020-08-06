@@ -7,8 +7,8 @@ public class CameraController : MonoBehaviour
     public float camMovSpeed = 100.0f;
     public float camRotSpeed = 100.0f;
     public float verticalSpeed = 1.0f;
-    public float rotationSpeed = 1.0f;
-    public float sensitivity = 0.2f;
+    public float PositionSensitivity = 0.0f;
+    public float RotationSensitivity = 0.0f;
     public float rotationFactor = 1.0f;
 
     public References references;
@@ -20,6 +20,7 @@ public class CameraController : MonoBehaviour
     public Vector3 InitialPosition;
     public Quaternion InitialRotation;
 
+    [SerializeField]
     public static bool AllowMovement = true;
 
     [SerializeField]
@@ -48,14 +49,21 @@ public class CameraController : MonoBehaviour
 
         float joyHInput = leftJoystick.Horizontal;
         float joyVInput = leftJoystick.Vertical;
+        float keyboardHInput = Input.GetAxis("Horizontal");
+        float keyboardVInput = Input.GetAxis("Vertical");
+/*
+        if (!(joyHInput >= PositionSensitivity) || !(joyHInput <= -PositionSensitivity)){
+            joyHInput = 0.0f;
+        }
 
+        if (!(joyVInput >= PositionSensitivity) || !(joyVInput <= -PositionSensitivity)){
+            joyVInput = 0.0f;
+        }
+*/        
         if(debugMovement)
         {
             Debug.LogFormat("Left_joystickH: {0}   Left_joystickV: {1}", joyHInput, joyVInput);
         }
-
-        float keyboardHInput = Input.GetAxis("Horizontal");
-        float keyboardVInput = Input.GetAxis("Vertical");
 
         float hMov = Mathf.Clamp(keyboardHInput + joyHInput, -1.0f, 1.0f) * Time.deltaTime * camMovSpeed;
         float vMov = Mathf.Clamp(keyboardVInput + joyVInput, -1.0f, 1.0f) * Time.deltaTime * camMovSpeed;
@@ -100,52 +108,49 @@ public class CameraController : MonoBehaviour
 
         float joyHInput = rightJoystick.Horizontal;
         float joyVInput = rightJoystick.Vertical;
+        float KeyboardHInput = 0.0f;
+        float KeyboardVInput = 0.0f;
 
+        if (Input.GetKey(KeyCode.J)) // left
+        {
+            KeyboardHInput = -1;
+        }
+
+        if (Input.GetKey(KeyCode.L)) // right
+        {
+            KeyboardHInput = 1;
+        }
+
+        if (Input.GetKey(KeyCode.I))  // up
+        {
+            KeyboardVInput = 1;
+        }
+
+        if (Input.GetKey(KeyCode.K)) // down
+        {
+            KeyboardVInput = -1;
+        }
+
+/*
+        if (!(joyHInput >= RotationSensitivity) || !(joyHInput <= -RotationSensitivity)){
+            joyHInput = 0.0f;
+        }
+
+        if (!(joyVInput >= RotationSensitivity) || !(joyVInput <= -RotationSensitivity)){
+            joyVInput = 0.0f;
+        }
+*/
         if(debugMovement)
         {
             Debug.LogFormat("Right_joystickH: {0}   Right_joystickV: {1}", joyHInput, joyVInput);
         }
-
-        if (Input.GetKey(KeyCode.J)){
-            hRot -= rotationSpeed;
-        }
-
-        if (Input.GetKey(KeyCode.L)){
-            hRot += rotationSpeed;
-        }
-
-        if (Input.GetKey(KeyCode.I)){
-            vRot -= rotationSpeed;
-        }
-
-        if (Input.GetKey(KeyCode.K)){
-            vRot += rotationSpeed;
-        }
-
-        if (joyHInput >= sensitivity){
-            hRot += rotationSpeed;
-        }
-        else if (joyHInput <= -sensitivity){
-            hRot -= rotationSpeed;    
-        }
-        if (joyVInput >= sensitivity){
-            vRot -= rotationSpeed;
-        }
-        else if (joyVInput <= -sensitivity){
-            vRot += rotationSpeed;
-        }
         
-        hRot *= Time.deltaTime * camRotSpeed;
-        vRot *= Time.deltaTime * camRotSpeed;
+        hRot = Mathf.Clamp(KeyboardHInput + joyHInput, -1.0f, 1.0f) * Time.deltaTime * camRotSpeed;
+        vRot = Mathf.Clamp(KeyboardVInput + joyVInput, -1.0f, 1.0f) * Time.deltaTime * camRotSpeed;
 
-        Vector3 rot = new Vector3(-vRot, hRot, 0.0f);
+        Vector3 rot = new Vector3(vRot, hRot, 0.0f);
         transform.Rotate(rot, Space.World);
         Vector3 eulerRotation = transform.rotation.eulerAngles;
         transform.rotation = Quaternion.Euler(eulerRotation.x, eulerRotation.y, 0);
-    }
-
-    public void switchMovement()
-    {
-        AllowMovement = !AllowMovement;
     }
 }

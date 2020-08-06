@@ -66,6 +66,7 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnimatorStateTransitionInspector
     - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
@@ -828,7 +829,7 @@ ScriptsOnlyBuild:
     className: AnimationTrack
   - hash:
       serializedVersion: 2
-      Hash: f40773e25b9116be853ce0a5dfc1fe84
+      Hash: 8cb581c44c7a74aa7ee61ba26d823797
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CameraController
@@ -1374,7 +1375,7 @@ ScriptsOnlyBuild:
     className: JoystickPlayerExample
   - hash:
       serializedVersion: 2
-      Hash: d835e37be8caf473a0d64dc941f2a2a8
+      Hash: a2e92c2b802e215e948b6c105b028f41
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SettingsMenu
@@ -1594,4 +1595,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/LevelSelect.unity
   - Assets/Scenes/Loading Screen.unity
   - Assets/Scenes/Fase01.unity
-  playerPath: D:/Projects/Unity/EG-1/EG-7.apk
+  playerPath: D:/Projects/Unity/ANDROID/EG-7.apk

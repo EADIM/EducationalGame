@@ -35,103 +35,136 @@ public class PlayerController : PlayerBase
         set => _gravity = value;
     }
 
-    [HideInInspector]
-    public List<Checkpoint> Checkpoints = new List<Checkpoint>();
-    public int StartPlatformPosition = 1;
+    [SerializeField]
+    public override float JumpForce
+    {
+        get => _jumpForce;
+        set => _jumpForce = value;
+    }
+
+    
+    [HideInInspector] public List<Checkpoint> Checkpoints = new List<Checkpoint>();
+    public int StartPlatformPosition = 0;
     private Animator PlayerAnimator;
     private Rigidbody PlayerRigidbody;
     private GameState GSReference;
-    [SerializeField]
-    private float UnitScale = 0.5492f; //the amount of units to relative to a meter.
     private int MovementDirection = -1;
-    [SerializeField]
-    private float TimeSpanned = 0.0f;
-    [SerializeField]
-    private bool IsMoving = false;
-    [SerializeField]
-    private bool IsJumping = false;
-    [SerializeField]
-    private bool JumpedMid = false;
-    [SerializeField]
-    private int jumpstates = 0;
-    [HideInInspector]
-    public string RunAnimationName = "is_running";
-    [HideInInspector]
-    public string JumpAnimationName = "is_going_upwards";
-    [HideInInspector]
-    public string WinAnimationName = "did_win";
+    [SerializeField] private float TimeSpanned = 0.0f;
+    [SerializeField] private bool IsMoving = false;
+    [SerializeField] private bool IsJumping = false;
+    [SerializeField]  private bool JumpedMid = false;
+    [SerializeField] private int jumpstates = 0;
+
+    [HideInInspector] public string RunAnimationName = "is_running";
+    [HideInInspector] public string JumpAnimationName = "is_going_upwards";
+    [HideInInspector] public string WinAnimationName = "did_win";
+
     private Vector3 CurrentPosition;
     private Vector3 PreviousPosition;
     private float MovementRange = 0.0000005f; // gap in which movement is not considered. 
     public bool IsPlayerOnInitialPlatform = true;
+    private InputFieldSwitcher InputFieldSwitcher;
 
 
 
     public override void Run()
     {
-        StartAnimation(RunAnimationName);
         if(!PlayerAnimator.GetBool(RunAnimationName))
         {
             PlayerAnimator.Play("Base Layer.Running",  0, 0.0f);   
         }
-        PlayerRigidbody.AddForce(MovementDirection * Vector3.forward * _acceleration * UnitScale, ForceMode.Force);
+        StartAnimation(RunAnimationName);
+        Vector3 force = MovementDirection 
+                        * Vector3.forward
+                        * _acceleration
+                        * GSReference.UnitScale
+                        ;
+        PlayerRigidbody.AddForce(force, ForceMode.Force);
     }
 
-    public override void Jump()
+    public override void Jump(Vector3 jump, ForceMode mode)
     {
         if(!IsJumping){
+            IsJumping = true;
             Debug.Log("Jump!");
             Debug.LogFormat("TimeSpanned = {0} s", TimeSpanned);
-            IsJumping = true;
             StopAnimation(RunAnimationName);
             StartAnimation(JumpAnimationName);
             PlayerAnimator.Play("Base Layer.Jump", 0, 0.0f);
-            PlayerRigidbody.AddForce(GetJumpVector(), ForceMode.VelocityChange);
+            PlayerRigidbody.AddForce(jump, mode);
         }
     }
 
-    private Vector3 GetJumpVector()
+
+    public Vector3 GetJumpVector()
     {
-        float Vx;
-        float Vy;
-        float Vz;
-        float V;
+        float Vx = 0;
+        float Vy = 0;
+        float Vz = 0;
+        float V = 0;
 
         float angleInRad = _jumpAngle * Mathf.Deg2Rad;
         float angleCos = Mathf.Cos(angleInRad);
         float angleSin = Mathf.Sin(angleInRad);
+        float angle2Sin = Mathf.Sin(2*angleInRad);
+
+        Debug.LogFormat("Cos({0:F5}): {1:F5}, Sen({0:F5}): {2:F5}, Sen(2*{0:F5}): {3:F5}", angleInRad, angleCos, angleSin, angle2Sin);
+
+        String msg = "Mass: " + _mass + ", Gravity: " + _gravity + ", JumpAngle: " + _jumpAngle + ", Jump Force: " + _jumpForce;
+
+        Vector3 rgV = PlayerRigidbody.velocity;
+        Debug.LogFormat("Rigidbody.velocity({0:F2}, {1:F2}, {2:F2})", rgV.x, rgV.y, rgV.z);
 
         if (IsMoving)
         {
-            Vz = PlayerRigidbody.velocity.z;
+            Debug.Log("Not Torricelli");
+            V = Mathf.Abs(PlayerRigidbody.velocity.z);
         }
         else
         {
-            V = _acceleration;
+            Debug.Log("Torricelli");
+            _acceleration = (_jumpForce * GSReference.UnitScale)/ _mass;
+            
+            Vector3 dist = references.GameState.GetComponentInParent<GetProblemInfo>().distanciaEntreMeioEFinal;
+            Debug.Log("Dist: {" + dist.x + ", " + dist.y + ", " + dist.z + "}");
+
+            V = Mathf.Sqrt((2*_acceleration*Mathf.Abs(dist.z)));
             Vz = V * angleCos;
         }
+
+        msg += ", Acceleration: " + _acceleration;
+
+        Debug.Log(msg);
 
         if(angleCos == 0.0f)
         {
             V = 0;
         }
-        else
+        else if (V == 0)
         {
             V = Vz / angleCos;
+        }
+        else{
+            Vz = V*angleCos;
         }
 
         Vy = V * angleSin;
         Vx = 0.0f;
 
-        float reach = (2 * Mathf.Pow(V, 2) * angleCos * angleSin) / _gravity;
+        float V_2 = V * V;
+
+        Debug.LogFormat("V: {0:F2} V²: {1:F2}", V, V_2);
+
+        float reach = (V_2 * angle2Sin) / (2 * _gravity);
+        reach /= GSReference.UnitScale;
 
         Vx = Mathf.Abs(Vx);
         Vy = Mathf.Abs(Vy);
         Vz = Mathf.Abs(Vz);
         V = Mathf.Abs(V);
 
-        Debug.LogFormat("Vx = {0} m/s,  Vy = {1} m/s,  Vz = {2} m/s,  V = {3} m/s", Vx, Vy, Vz, V);
-        Debug.LogFormat("Alcance = {0} m", reach);
+        Debug.LogFormat("Vx = {0:F2} m/s,  Vy = {1:F2} m/s,  Vz = {2:F2} m/s,  V = {3:F2} m/s", Vx, Vy, Vz, V);
+        Debug.LogFormat("Alcance = {0:F2} m", reach);
 
         Vector3 JumpVector = new Vector3(Vx, Vy, -Vz);
 
@@ -147,13 +180,13 @@ public class PlayerController : PlayerBase
 
     public void StopAnimation(string animationName)
     {
-        Debug.Log("Stopping " + animationName + " animation.");
+        //Debug.Log("Stopping " + animationName + " animation.");
         PlayerAnimator.SetBool(animationName, false);
     }
 
     public void StartAnimation(string animationName)
     {
-        Debug.Log("Starting " + animationName + " animation.") ;
+        //Debug.Log("Starting " + animationName + " animation.") ;
         PlayerAnimator.SetBool(animationName, true);
     }
 
@@ -200,13 +233,15 @@ public class PlayerController : PlayerBase
     public void ResetEverythingFromScratch()
     {
         Debug.Log("Resetting from scratch");
+        _acceleration = 0.0f;
+        _jumpAngle = 0.0f;
         Reset(Checkpoints[0]);
         Checkpoints.Clear();
     }
 
     public void Reset(Checkpoint ckp)
     {
-        Debug.Log("Reset() called.");
+        //Debug.Log("Reset() called.");
         StopMovement();
         ResetAnimation();
         ResetValues(ckp);
@@ -243,16 +278,6 @@ public class PlayerController : PlayerBase
         PlayerAnimator.Play("Base Layer.Idle", 0, 0.0f);
     }
 
-    public void setAngle(string value)
-    {
-        _jumpAngle = ParseValue(value);
-    }
-
-    public void setAcceleration(string value)
-    {
-        _acceleration = ParseValue(value);
-    }
-
     private float ParseValue(string text)
     {
         float value = 0.0f;
@@ -269,6 +294,12 @@ public class PlayerController : PlayerBase
         return value;
     }
 
+    public void AddCheckpoint()
+    {
+        Checkpoint ckp = new Checkpoint(transform.position, transform.rotation, IsPlayerOnInitialPlatform, JumpedMid);
+        ckp.jumpstates = jumpstates;
+        Checkpoints.Add(ckp);
+    }
 
 
 
@@ -282,6 +313,7 @@ public class PlayerController : PlayerBase
         PlayerAnimator = GetComponent<Animator>();
         PlayerRigidbody = GetComponent<Rigidbody>();
         GSReference = references.GameState.GetComponent<GameState>();
+        InputFieldSwitcher = references.InputContainer.GetComponent<InputFieldSwitcher>(); 
 
         Physics.gravity = new Vector3(0.0f, -_gravity, 0.0f);
     }
@@ -314,7 +346,7 @@ public class PlayerController : PlayerBase
 
             if (Checkpoints.Count == 2 && !JumpedMid && jumpstates == 1)
             {
-                Jump();
+                Jump(GetJumpVector(), ForceMode.VelocityChange);
                 JumpedMid = true;
                 jumpstates = 2;
             }
@@ -350,9 +382,8 @@ public class PlayerController : PlayerBase
             {
                 if (Checkpoints.Count == 0)
                 {
-                    Checkpoint ckp = new Checkpoint(transform.position, transform.rotation, IsPlayerOnInitialPlatform, JumpedMid);
-                    ckp.jumpstates = jumpstates;
-                    Checkpoints.Add(ckp);
+                    AddCheckpoint();
+                    InputFieldSwitcher.setFieldActive(InputFieldSwitcher.InputField01);
                 }
             }
         }
@@ -379,11 +410,10 @@ public class PlayerController : PlayerBase
                 {
                     if (Checkpoints.Count == 1) // if there's only one checkpoint, add another
                     {
+                        InputFieldSwitcher.SwitchFields();
                         IsPlayerOnInitialPlatform = false;
                         jumpstates = 1;
-                        Checkpoint ckp = new Checkpoint(transform.position, transform.rotation, IsPlayerOnInitialPlatform, JumpedMid);
-                        ckp.jumpstates = jumpstates;
-                        Checkpoints.Add(ckp);
+                        AddCheckpoint();
                         //GSReference.playMessage(1);
 
                         references.ExplorerCamera.transform.position = new Vector3(
@@ -391,6 +421,8 @@ public class PlayerController : PlayerBase
                             references.PlayerBackCamera.transform.position.y + 5.0f,
                             references.PlayerBackCamera.transform.position.z + 15.0f 
                         );
+
+                        GameObject JumpForceContainer = Utils.GetChildWithName(references.LevelStats, "Jump Force");
 
                         Reset(Checkpoints[Checkpoints.Count - 1]);
                         GSReference.SwitchState(GSReference.getExplorationName());
@@ -404,8 +436,7 @@ public class PlayerController : PlayerBase
                 {
                     if (Checkpoints.Count == 2)
                     {
-                        Checkpoint ckp = new Checkpoint(transform.position, transform.rotation, IsPlayerOnInitialPlatform, JumpedMid);
-                        Checkpoints.Add(ckp);
+                        AddCheckpoint();
                         //GSReference.playMessage(1);
                         GSReference.SwitchState(GSReference.getWinName());   
                     }
@@ -419,4 +450,48 @@ public class PlayerController : PlayerBase
         }
     }
 
+
+
+    //Set values using float
+    public void setAcceleration(float value){
+        _acceleration = value;
+    }
+
+    public void setJumpForce(float value){
+        _jumpForce = value;
+    }
+
+    public void setMass(float value){
+        _mass = value;
+    }
+
+    public void setGravity(float value){
+        _gravity = value;
+    }
+
+    public void setJumpAngle(float value){
+        _jumpAngle = value;
+    }
+
+
+    // Set value using string
+    public void setAcceleration(string value)
+    {
+        _acceleration = ParseValue(value);
+    }
+    public void setJumpForce(string value){
+        _jumpForce = ParseValue(value);
+    }
+
+    public void setMass(string value){
+        _mass = ParseValue(value);
+    }
+
+    public void setGravity(string value){
+        _gravity = ParseValue(value);
+    }
+    public void setJumpAngle(string value)
+    {
+        _jumpAngle = ParseValue(value);
+    }
 }

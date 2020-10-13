@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class ToggleInputField : MonoBehaviour
@@ -12,7 +13,11 @@ public class ToggleInputField : MonoBehaviour
     private GameObject gameState;
     public bool canShow = true;
     private ToggleUIElement UIElement;
+    private Camera explorerCamera;
 
+    private void Awake() {
+        explorerCamera = references.ExplorerCamera.GetComponent<Camera>();
+    }
 
     void Start()
     {
@@ -23,30 +28,45 @@ public class ToggleInputField : MonoBehaviour
 
     void Update() 
     {    
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape) && UIElement.isVisible)
         {
             Debug.LogFormat("Escape key pressed.");
             shouldActivateInputContainer = false;
             toggleInputContainer();
         }
-    }
-
-    private void OnMouseDown() 
-    {
+    
+        //bool blockedByInterface;
+        
+        if(Application.isEditor)
+        {
+            if(Input.GetMouseButton(0))
+            {
+                checkPointer( Input.mousePosition );
+            }
+        }
         // Check if there is a touch
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             int fingerID = Input.GetTouch(0).fingerId;
-        
-            // Check if finger is over a UI element
-            if (EventSystem.current.IsPointerOverGameObject(fingerID))
+            Vector3 touchPos = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0);
+            checkPointer( touchPos );
+        }
+    }
+
+    private void checkPointer(Vector3 pos)
+    {
+        shouldActivateInputContainer = gameState.GetComponent<GameState>().States["Exploration"];
+        RaycastHit hit; 
+        Ray ray = explorerCamera.ScreenPointToRay(pos); 
+        if ( Physics.Raycast (ray,out hit,100.0f)) 
+        {
+            string name = hit.transform.name;
+            string tag = hit.transform.tag;
+
+            //Debug.LogFormat("Hit.name: {0} Hit.tag: {1}", name, tag);
+            
+            if ((tag == "Player" && !UIElement.isVisible && canShow && !CameraController.isLMoving && !CameraController.isRMoving))
             {
-                Debug.Log("finger is over panel.");
-                return;
-            }
-            else{
-                Debug.Log("finger is not over panel.");
-                shouldActivateInputContainer = gameState.GetComponent<GameState>().States["Exploration"];
                 toggleInputContainer();
             }
         }

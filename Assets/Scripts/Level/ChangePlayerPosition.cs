@@ -5,25 +5,29 @@ using UnityEngine;
 public class ChangePlayerPosition : MonoBehaviour
 {
     public References references;
-    private GameObject player;
-    PlayerController sm;
-    GameState gms;
+    
+    GameObject player;
     GetProblemInfo gpi;
+    PlayerController pc;
+    GameState gms;
 
-    public string nameInitialPlatform01 = "Inferior Meio";
-    public string nameInitialPlatform02 = "Meio Meio";
+    public readonly string nameInitialPlatform01 = "Inferior Meio";
+    public readonly string nameInitialPlatform02 = "Meio Meio";
     public static bool canChangePosition = true;
 
-    private void Start() {
+    private void Awake() {
         player = references.Player;
-        sm = player.GetComponent<PlayerController>();
+    }
+
+    private void Start() {
+        pc = player.GetComponent<PlayerController>();
         gms = references.GameState.GetComponent<GameState>();
         gpi = references.GameState.GetComponent<GetProblemInfo>();
     }
 
     private void OnMouseDown() {
-        Debug.Log("Clicou no collider do " + transform.parent.name);
-        Debug.Log("Posição do Coliider: " + transform.position);
+        //Debug.Log("Clicou no collider do " + transform.parent.name);
+        //Debug.Log("Posição do Coliider: " + transform.position);
 
         if(gms.States[gms.getExplorationName()])
         {
@@ -31,23 +35,30 @@ public class ChangePlayerPosition : MonoBehaviour
             {
                 if(transform.parent.name == nameInitialPlatform01)
                 {
-                    sm.StartPlatformPosition = 0;
+                    pc.StartPlatformPosition = 0;
                 }
                 else if(transform.parent.name == nameInitialPlatform02)
                 {
-                    sm.StartPlatformPosition = 1;
+                    pc.StartPlatformPosition = 1;
                 }
 
-                if(sm.Checkpoints.Count > 0)
+                if(pc.Checkpoints.Count > 0)
                 {
-                    Vector3 newPosition = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
-                    player.GetComponent<PlayerController>().Checkpoints[0].setPosition(newPosition);
-                    gpi.ColisorPlataformaInicial = transform.GetComponent<BoxCollider>();
-                    gpi.OnIntialPlatformChange();
+                    SetNewPosition();
                 }
-                sm.ResetPosition(sm.Checkpoints[0]);
+                pc.ResetPosition(pc.Checkpoints[0]);
             }
         }
+    }
+
+    public void SetNewPosition()
+    {
+        //Debug.LogFormat("Player position: {0} Collider: {1}", player.transform, transform);
+
+        Vector3 newPosition = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
+        pc.Checkpoints[0].setPosition(newPosition);
+        gpi.ColisorPlataformaInicial = transform.GetComponent<BoxCollider>();
+        gpi.OnIntialPlatformChange();
     }
 
     public void changeToFalse(){

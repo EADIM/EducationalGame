@@ -16,6 +16,8 @@ TagManager:
   - MidPlatform-Collider
   - FinalPlatform-Collider
   - Boundaries
+  - PlayerEyes
+  - Input Container
   layers:
   - Default
   - TransparentFX
@@ -26,7 +28,7 @@ TagManager:
   - 
   - 
   - Post Processing
-  - 
+  - Music
   - 
   - 
   - 

@@ -4,37 +4,63 @@ using UnityEngine;
 
 public class ToggleCamera : MonoBehaviour
 {
-    public Camera Camera01;
-    public Camera Camera02;
+    private int camera_index = 1;
+    public Camera[] cameras = new Camera[3];
+    [HideInInspector] public Camera SideCamera;
+    [HideInInspector] public Camera ExplorerCamera;
+    [HideInInspector] public Camera BackCamera;
 
-    public bool isMain = true;
-    private bool isSwitch = false;
+    public Camera currentCamera;
+    public Camera previousCamera;
+    private string currentActiveCamera = "Explorer Camera";
+    private string previousActiveCamera = "None";
 
+    private void Awake() {
+        //Debug.Log("Length of Cameras: " + cameras.Length);
+        SideCamera = cameras[0];
+        ExplorerCamera = cameras[1];
+        BackCamera = cameras[2];
+
+        currentCamera = ExplorerCamera;
+    }
 
     private void Start() {
-        if(isMain){
-            Camera01.enabled = true;
-            Camera02.enabled = false;
-        }
-        else{
-            Camera01.enabled = false;
-            Camera02.enabled = false;
-        }
+        SideCamera.enabled = false;
+        ExplorerCamera.enabled = true;
+        BackCamera.enabled = false;
     }
     
     public void switchCameras(){
-        Camera01.enabled = isSwitch;
-        Camera02.enabled = !isSwitch;
-        isSwitch = !isSwitch;
+        for (int i = 0; i < cameras.Length; i++){
+            if (i == camera_index){
+                cameras[i].enabled = true;
+            }
+            else{
+                cameras[i].enabled = false;
+            }
+        }
+
+        previousCamera = currentCamera;
+        previousActiveCamera = previousCamera.name;
+        currentCamera = cameras[camera_index];
+        currentActiveCamera = currentCamera.name;
+        
+        camera_index++;
+
+        camera_index = (camera_index >= cameras.Length) ? 0 : camera_index;
+
+        Debug.Log("Selected " + currentActiveCamera);
     }
 
-    public void switchToCamera01(){
-        Camera01.enabled = true;
-        Camera02.enabled = false;
+    public void switchToCamera(Camera current, Camera destiny){
+        current.enabled = false;
+        destiny.enabled = true;
+
+        currentCamera = destiny;
+        currentActiveCamera = destiny.name;
     }
 
-    public void switchToCamera02(){
-        Camera01.enabled = false;
-        Camera02.enabled = true;
+    public string getActiveCameraName(){
+        return currentActiveCamera;
     }
 }

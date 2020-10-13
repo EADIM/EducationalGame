@@ -19,14 +19,16 @@ public class CameraController : MonoBehaviour
     private BoxCollider mapBoundaries;
     public Vector3 InitialPosition;
     public Quaternion InitialRotation;
+    [SerializeField] public static bool AllowMovement = true;
+    [SerializeField] private bool debugMovement = false;
+    public static bool isLMoving = false;
+    public static bool isRMoving = false;
 
-    [SerializeField]
-    public static bool AllowMovement = true;
+    private ToggleCamera toggle;
 
-    [SerializeField]
-    private bool debugMovement = false;
 
     private void Start() {
+        toggle = references.GameState.GetComponent<ToggleCamera>();
         ExplorerCamera = references.ExplorerCamera;
         GameObject JoystickContainer = Utils.GetChildWithName(references.Canvas.gameObject, "Joysticks Container");
         leftJoystick = Utils.GetChildWithName(JoystickContainer, "Left Joystick").GetComponent<FixedJoystick>();
@@ -38,7 +40,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (AllowMovement){
+        if (AllowMovement && toggle.currentCamera.name == transform.name){
             getMovementInput();
             getRotationInput();
         }
@@ -47,19 +49,24 @@ public class CameraController : MonoBehaviour
     private void getMovementInput()
     {
 
-        float joyHInput = leftJoystick.Horizontal;
-        float joyVInput = leftJoystick.Vertical;
-        float keyboardHInput = Input.GetAxis("Horizontal");
-        float keyboardVInput = Input.GetAxis("Vertical");
-/*
-        if (!(joyHInput >= PositionSensitivity) || !(joyHInput <= -PositionSensitivity)){
+        float joyHInput = -leftJoystick.Horizontal;
+        float joyVInput = -leftJoystick.Vertical;
+        float keyboardHInput = -Input.GetAxis("Horizontal");
+        float keyboardVInput = -Input.GetAxis("Vertical");
+
+        float hMagnitude = Mathf.Abs(joyHInput);
+        float vMagnitude = Mathf.Abs(joyVInput);
+
+        if (hMagnitude < ControlsManager.LeftSensitivity)
+        {
             joyHInput = 0.0f;
         }
 
-        if (!(joyVInput >= PositionSensitivity) || !(joyVInput <= -PositionSensitivity)){
+        if (vMagnitude < ControlsManager.LeftSensitivity)
+        {
             joyVInput = 0.0f;
         }
-*/        
+
         if(debugMovement)
         {
             Debug.LogFormat("Left_joystickH: {0}   Left_joystickV: {1}", joyHInput, joyVInput);
@@ -85,10 +92,11 @@ public class CameraController : MonoBehaviour
         Vector3 FORWARD = transform.TransformDirection(Vector3.forward);
         Vector3 UP = transform.TransformDirection(Vector3.up);
 
+        int DIRECTION = (ControlsManager.InvertedControls) ? 1 : -1;
         Vector3 pos = transform.position;
-        pos += FORWARD * vMov; // Z axis
-        pos += RIGHT * hMov; // X axis
-        pos += UP * upMov; // Y axis
+        pos += DIRECTION * FORWARD * vMov; // Z axis
+        pos += DIRECTION * RIGHT * hMov; // X axis
+        pos += DIRECTION * UP * upMov; // Y axis
 
         if(mapBoundaries.enabled){
             pos.x = Mathf.Clamp(pos.x, mapBoundaries.bounds.min.x,mapBoundaries.bounds.max.x);
@@ -99,6 +107,15 @@ public class CameraController : MonoBehaviour
         //Debug.Log("Clamped position = " + pos.ToString());
 
         transform.position = pos;
+
+        if(hMagnitude == 0.0f && vMagnitude == 0.0f)
+        {
+            isLMoving = false;
+        }
+        else
+        {
+            isLMoving = true;
+        }
     }
 
     private void getRotationInput()
@@ -106,8 +123,8 @@ public class CameraController : MonoBehaviour
         float hRot = 0.0f;
         float vRot = 0.0f;
 
-        float joyHInput = rightJoystick.Horizontal;
-        float joyVInput = rightJoystick.Vertical;
+        float joyHInput = -rightJoystick.Horizontal;
+        float joyVInput = -rightJoystick.Vertical;
         float KeyboardHInput = 0.0f;
         float KeyboardVInput = 0.0f;
 
@@ -131,15 +148,19 @@ public class CameraController : MonoBehaviour
             KeyboardVInput = -1;
         }
 
-/*
-        if (!(joyHInput >= RotationSensitivity) || !(joyHInput <= -RotationSensitivity)){
+        float hMagnitude = Mathf.Abs(joyHInput);
+        float vMagnitude = Mathf.Abs(joyVInput);
+
+        if (hMagnitude < ControlsManager.RightSensitivity)
+        {
             joyHInput = 0.0f;
         }
 
-        if (!(joyVInput >= RotationSensitivity) || !(joyVInput <= -RotationSensitivity)){
+        if (vMagnitude < ControlsManager.RightSensitivity)
+        {
             joyVInput = 0.0f;
         }
-*/
+
         if(debugMovement)
         {
             Debug.LogFormat("Right_joystickH: {0}   Right_joystickV: {1}", joyHInput, joyVInput);
@@ -148,9 +169,22 @@ public class CameraController : MonoBehaviour
         hRot = Mathf.Clamp(KeyboardHInput + joyHInput, -1.0f, 1.0f) * Time.deltaTime * camRotSpeed;
         vRot = Mathf.Clamp(KeyboardVInput + joyVInput, -1.0f, 1.0f) * Time.deltaTime * camRotSpeed;
 
+        int DIRECTION = (ControlsManager.InvertedControls) ? 1 : -1;
         Vector3 rot = new Vector3(vRot, hRot, 0.0f);
+        rot *= DIRECTION;
         transform.Rotate(rot, Space.World);
+        
         Vector3 eulerRotation = transform.rotation.eulerAngles;
+        
         transform.rotation = Quaternion.Euler(eulerRotation.x, eulerRotation.y, 0);
+
+        if(hMagnitude == 0.0f && vMagnitude == 0.0f)
+        {
+            isRMoving = false;
+        }
+        else
+        {
+            isRMoving = true;
+        }
     }
 }

@@ -20,7 +20,7 @@ public class Timer : MonoBehaviour
     {
         while(true)
         {
-            if(gms.States[gms.getSimulationName()])
+            if(!gms.States[gms.getStartName()])
             {
                 seconds += Time.deltaTime;
                 if(seconds + Time.deltaTime >= 60)

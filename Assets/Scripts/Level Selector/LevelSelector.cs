@@ -30,4 +30,8 @@ public class LevelSelector : MonoBehaviour
             Select("Menu");
         }
     }
+
+    public static Scene GetCurrentScene(){
+        return scene;
+    }
 }

@@ -4,71 +4,66 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEditor;
 using System.IO;
+using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
-    private static SettingsMenu _instance; 
-
-    public SettingsMenu Instance
-    {
-        get
-        {
-            if(_instance == null){
-                _instance = new SettingsMenu();
-            }
-
-            return _instance;
-        }
-    }
-
-    private SettingsMenu(){}
-
     public TMPro.TMP_Dropdown qualityLevelDropdown;
-    public AudioMixer audioMixer;
-    private static TextAsset default_settings;
-    [SerializeField]
-    private static int currentQualityIndex = 0;
-    [SerializeField]
-    private static int previousQualityIndex = 0;
+    public AudioMixer BKGMixer, SFXMixer;
+    public Slider BKGSlider, SFXSlider;
+    public TMPro.TMP_Text BKGPercentage, SFXPercentage;
+    public Toggle InvertControlsToggle;
 
-    private void Awake() {
-        default_settings = (TextAsset) Resources.Load("default_settings", typeof(TextAsset));
-        try
-        {
-            currentQualityIndex = int.Parse(Utils.getBetween(default_settings.text, "default_quality:", "\n"));
-        }
-        catch(FormatException fe)
-        {
-            Debug.Log(fe.ToString());
-            Debug.Log("Could not parse 'default_settings.txt' default quality.");
-            currentQualityIndex = QualitySettings.GetQualityLevel();
-        }
+    private static float backgroundFloat, sfxFloat;
+    private static int qualityIndex;
 
-        previousQualityIndex = currentQualityIndex;
-        QualitySettings.SetQualityLevel(currentQualityIndex);
-        qualityLevelDropdown.value = currentQualityIndex;
+    private void Start() {
+        BKGSlider.value = AudioManager.BKG_Volume;
+        SFXSlider.value = AudioManager.SFX_Volume;
+
+        SetMusicVolume(AudioManager.BKG_Volume);
+        SetSFXVolume(AudioManager.SFX_Volume);
+        SetQuality(GraphicsManager.Quality_Index);
+        SetInvertedControls(ControlsManager.InvertedControls);
     }
 
-    public void SetVolume(float volume){
-        audioMixer.SetFloat("volume", volume);
+    public void SetText(float value, TMPro.TMP_Text tmp_text)
+    {
+        int percentage = (int) ((value + 80.0f) * (100/80.0f));
+        string text = percentage.ToString() + " %";
+        //Debug.LogFormat("{0}: {1}", tmp_text.transform.parent.name,text);
+        tmp_text.text = text;
+    }
+
+    public void SetMusicVolume(float volume){
+        BKGMixer.SetFloat("volume", volume);
+        SetText(volume, BKGPercentage);
+        AudioManager.BKG_Volume = volume;
+    }
+
+    public void SetSFXVolume(float volume){
+        SFXMixer.SetFloat("volume", volume);
+        SetText(volume, SFXPercentage);
+        AudioManager.SFX_Volume = volume;
     }
 
     public void SetQuality(int qualityIndex){
-        previousQualityIndex = currentQualityIndex;
-        currentQualityIndex = qualityIndex;
-        qualityLevelDropdown.value = currentQualityIndex;
-        //Debug.LogFormat("Previous Quality Index: {0}  Current Quality Index: {1}", previousQualityIndex, currentQualityIndex);
-        StartCoroutine(changeDefaultSettingsFile());
+        QualitySettings.SetQualityLevel(qualityIndex);
+        qualityLevelDropdown.value = qualityIndex;
+        GraphicsManager.Quality_Index = qualityIndex;
     }
 
-    private IEnumerator changeDefaultSettingsFile(){
-        string oldValue = "default_quality: " + previousQualityIndex;
-        string newValue = "default_quality: " + currentQualityIndex;
-        string oldText = default_settings.text;
-        string newText = oldText.Replace(oldValue, newValue);
-        string path = Application.dataPath + "/Resources/default_settings.txt";
-        //Debug.LogFormat("Default settings path: '{0}'", path);
-        File.WriteAllText(path, newText);
-        yield return null;
+    public void SetInvertedControls(bool set)
+    {
+        ControlsManager.InvertedControls = set;
+        InvertControlsToggle.isOn = set;
+    }
+
+    public void SaveSettings()
+    {
+        Debug.LogFormat("Saving setting:\n\tBKG: {0}  \n\tSFX:{1}  \n\tQuality: {2}", AudioManager.BKG_Volume, AudioManager.SFX_Volume, GraphicsManager.Quality_Index);
+        AudioManager.Save();
+        GraphicsManager.Save();
+        ControlsManager.Save();
     }
 }

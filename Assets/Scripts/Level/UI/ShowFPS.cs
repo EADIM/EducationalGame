@@ -9,7 +9,7 @@ public class ShowFPS : MonoBehaviour
     private string fps;
     public GameObject textLabel;
  
-    void Start(){
+    private void Awake() {
         StartCoroutine(FPS());
     }
  

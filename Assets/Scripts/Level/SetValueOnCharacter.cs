@@ -15,7 +15,16 @@ public class SetValueOnCharacter : MonoBehaviour
             pcont.setAcceleration(inputField.text);
         }
         else if(attribute == 1){
-            pcont.setAngle(inputField.text);
+            pcont.setJumpAngle(inputField.text);
+        }
+        else if(attribute == 2){
+            pcont.setJumpForce(inputField.text);
+        }
+        else if(attribute == 3){
+            pcont.setGravity(inputField.text);
+        }
+        else if(attribute == 4){
+            pcont.setMass(inputField.text);
         }
     }
 

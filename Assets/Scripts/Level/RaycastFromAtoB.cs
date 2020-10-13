@@ -9,7 +9,7 @@ public class RaycastFromAtoB : MonoBehaviour
     public int MaxRayDistance = 1000;
     public bool debug = false;
 
-    private GameObject StartPoint;
+    public GameObject StartPoint;
     private Rigidbody playerRigidbody;
     private PlayerController playerController;
     
@@ -32,11 +32,12 @@ public class RaycastFromAtoB : MonoBehaviour
         {
             if (Physics.Raycast(A_Pos, StartPoint.transform.TransformDirection(direction), out hitInfo, MaxRayDistance))
             {
-                if (hitInfo.transform.tag == "Player")
+                if (hitInfo.transform.tag == "Player" || hitInfo.transform.name == "Player")
                 {
+                    Debug.Log("Hit player");
                     Debug.DrawRay(A_Pos, StartPoint.transform.TransformDirection(direction), Color.green);
                     playerController.IsPlayerOnInitialPlatform = false;
-                    playerController.Jump();
+                    playerController.Jump(playerController.GetJumpVector(), ForceMode.VelocityChange);
                 }
                 else
                 {
@@ -44,5 +45,10 @@ public class RaycastFromAtoB : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void setStartPoint(GameObject newPoint){
+        StartPoint = newPoint;
+        //Debug.LogFormat("StartPoint Position: {0}", StartPoint.transform.position.ToString());
     }
 }

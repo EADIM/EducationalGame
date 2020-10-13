@@ -82,4 +82,21 @@ public class Utils : MonoBehaviour
 
         return "";
     }
+
+    public void ShowMessage(string msg, GameObject canvas, string message_container_name, string action_message_name){
+        GameObject MessageContainer = Utils.GetChildWithName(canvas, message_container_name);
+        GameObject message = Utils.GetChildWithName(MessageContainer, action_message_name);
+        TMPro.TMP_Text messageTMP = message.GetComponent<TMPro.TMP_Text>();
+        messageTMP.text = msg;
+        messageTMP.color = new Color(154.0f/255.0f,0,0,1);
+        ToggleUIElement MessageContainerUI = MessageContainer.GetComponent<ToggleUIElement>();
+        MessageContainerUI.Show();
+        StartCoroutine(HideMessage(4.0f, MessageContainerUI));
+    }
+
+    private IEnumerator HideMessage(float waitTime, ToggleUIElement uiElem)
+    {
+        yield return new WaitForSecondsRealtime(waitTime);
+        uiElem.Hide();
+    }
 }

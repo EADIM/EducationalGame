@@ -31,6 +31,9 @@ public class GetValueFromPlayer : MonoBehaviour
         else if (attribute == 3){
             value = Mathf.Abs(sim.Gravity);
         }
+        else if (attribute == 4){
+            value = sim.JumpForce;
+        }
 
         return value;
     }

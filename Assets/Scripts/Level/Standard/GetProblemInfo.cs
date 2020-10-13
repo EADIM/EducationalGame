@@ -6,27 +6,17 @@ public class GetProblemInfo : MonoBehaviour
 {
     public References references;
     public SetProblemInfo setProblemInfo;
-
-    [SerializeField]
+    
     public BoxCollider ColisorPlataformaInicial;
-    [SerializeField]
-    private BoxCollider ColisorPlataformaDoMeio;
-    [SerializeField]
-    private BoxCollider ColisorPlataformaFinal;
-    [SerializeField]
-    private GameObject CentroDoRaycastDoPulo;
-    [SerializeField]
-    private Vector3 dimensaoPlataformaInicial = Vector3.zero;
-    [SerializeField]
-    private Vector3 dimensaoPlataformaMeio = Vector3.zero;
-    [SerializeField]
-    private Vector3 dimensaoPlataformaFinal = Vector3.zero;
-    [SerializeField]
-    private Vector3 distanciaEntreInicialEPulo = Vector3.zero;
-    [SerializeField]
-    private Vector3 distanciaEntrePuloEMeio = Vector3.zero;
-    [SerializeField]
-    private Vector3 distanciaEntreMeioEFinal = Vector3.zero;
+    public BoxCollider ColisorPlataformaDoMeio;
+    public BoxCollider ColisorPlataformaFinal;
+    public GameObject CentroDoRaycastDoPulo;
+    public Vector3 dimensaoPlataformaInicial = Vector3.zero;
+    public Vector3 dimensaoPlataformaMeio = Vector3.zero;
+    public Vector3 dimensaoPlataformaFinal = Vector3.zero;
+    public Vector3 distanciaEntreInicialEPulo = Vector3.zero;
+    public Vector3 distanciaEntrePuloEMeio = Vector3.zero;
+    public Vector3 distanciaEntreMeioEFinal = Vector3.zero;
 
     private void Awake() {
         ColisorPlataformaInicial = references.PlataformaInicial01.GetComponent<BoxCollider>();
@@ -43,6 +33,10 @@ public class GetProblemInfo : MonoBehaviour
     public void OnIntialPlatformChange(){
         distanciaEntreInicialEPulo = CentroDoRaycastDoPulo.transform.position - ColisorPlataformaInicial.bounds.center;
         setProblemInfo.OnInfoChanged(this);
+    }
+
+    public void OnVariablesChange(){
+        SetVariables();
     }
 
     private void SetVariables(){

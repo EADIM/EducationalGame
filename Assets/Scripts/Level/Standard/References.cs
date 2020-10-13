@@ -7,6 +7,7 @@ public class References : MonoBehaviour
     public GameObject Player;
     public GameObject PlataformaInicial01;
     public GameObject PlataformaInicial02;
+    public GameObject PlataformaPulo;
     public GameObject PlataformaDoMeio;
     public GameObject PlataformaFinal;
     public GameObject Canvas;
@@ -17,4 +18,8 @@ public class References : MonoBehaviour
     public GameObject RaycastCenter;
     public GameObject GameState;
     public GameObject QuestionInfo;
+    public GameObject ExplanationInfo;
+    public GameObject HelpInfo;
+    public GameObject LevelStats;
+    public GameObject InputContainer;
 }

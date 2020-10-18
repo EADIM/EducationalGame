@@ -6,12 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(TMPro.TMP_Text))]
 public class Checkpoint_UI : MonoBehaviour
 {
-    public References references;
+    public fase01_References references;
     
-    private PlayerController player_sm;
+    private fase01_PlayerController player_sm;
 
     private void Start() {
-        player_sm = references.Player.GetComponent<PlayerController>();
+        player_sm = references.Player.GetComponent<fase01_PlayerController>();
     }
 
     void Update()

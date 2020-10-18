@@ -12,9 +12,9 @@ public class SetProblemInfo : MonoBehaviour
     Você pode decidir a aceleração inicial do objeto e o ângulo do pulo. 
     */
 
-    public References references;
-    private GameState gms;
-    private PlayerController player;
+    public fase01_References references;
+    private fase01_GameState gms;
+    private fase01_PlayerController player;
     public TMPro.TMP_Text textUI;
 
     [SerializeField]
@@ -43,8 +43,8 @@ public class SetProblemInfo : MonoBehaviour
     }
 
     private void Start() {
-        player = references.Player.GetComponent<PlayerController>();
-        gms = references.GameState.GetComponent<GameState>();
+        player = references.Player.GetComponent<fase01_PlayerController>();
+        gms = references.GameState.GetComponent<fase01_GameState>();
         UnitScale = gms.UnitScale;
     }
 

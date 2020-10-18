@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GameObject))]
 public class PlayerCamera : MonoBehaviour
 {
-    public References references;
+    public fase01_References references;
     public Vector3 distance;
     public bool BackCam = true;
     

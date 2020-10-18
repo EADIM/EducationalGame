@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    public References references;
+    public fase01_References references;
      private float seconds = 0.0f;
     private int minutes = 0;
     private int hours = 0;
-    private GameState gms;
+    private fase01_GameState gms;
 
     private void Start() 
     {
-        gms = references.GameState.GetComponent<GameState>();
+        gms = references.GameState.GetComponent<fase01_GameState>();
         StartCoroutine(UpdateTime());
     }
 

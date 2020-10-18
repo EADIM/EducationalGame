@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GetProblemInfo : MonoBehaviour
 {
-    public References references;
+    public fase01_References references;
     public SetProblemInfo setProblemInfo;
     
     public BoxCollider ColisorPlataformaInicial;
